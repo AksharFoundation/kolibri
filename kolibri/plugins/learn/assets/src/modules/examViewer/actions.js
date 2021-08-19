@@ -1,6 +1,6 @@
 import { ExamAttemptLogResource, ExamLogResource } from 'kolibri.resources';
 import router from 'kolibri.coreVue.router';
-import { now } from 'kolibri.ut ils.serverClock';
+import { now } from 'kolibri.utils.serverClock';
 import { ClassesPageNames } from '../../constants';
 import { LearnerClassroomResource } from '../../apiResources';
 import { calcQuestionsAnswered } from './utils';
