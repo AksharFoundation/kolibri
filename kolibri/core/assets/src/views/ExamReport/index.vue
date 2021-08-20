@@ -9,6 +9,7 @@
         :completionTimestamp="completionTimestamp"
         :completed="closed"
         :examLog="examLog"
+        :examAttempts="examAttempts"
       />
     </template>
 

@@ -114,6 +114,10 @@
         type: Object,
         required: false,
       },
+      examAttempts: {
+        type: Array,
+        required: false,
+      },
     },
     data() {
       return {
@@ -144,7 +148,7 @@
       retakeEnabled() {
         // The Retake button is enabled only for leaners,
         // the threshold should be kept in a proper conf and not here (TODO)
-        var isScoreBelowThreshold =
+        let isScoreBelowThreshold =
           this.questions.reduce((a, q) => a + q.correct, 0) / this.questions.length || 0 < 90;
         return this.isLearner && isScoreBelowThreshold;
       },
@@ -166,12 +170,16 @@
           },
         })
           .then(() => {
-            // Clear the learner classroom cache here as its progress data is now
-            // stale
-            LearnerClassroomResource.clearCache();
-            // Redirect to home page. TODO: figure out how to redirect to exam
-            // page directly
-            this.$router.push({ path: '/' });
+            // Redirect to exam page
+            this.$router.push(
+              this.$router.getRoute('EXAM_VIEWER', {
+                params: {
+                  examId: this.examLog.exam,
+                  classId: this.$route.params.classId,
+                  questionNumber: 0,
+                },
+              })
+            );
           })
           .catch(error => {
             store.dispatch('handleApiError', error, { root: true });
