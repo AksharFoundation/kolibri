@@ -1,53 +1,74 @@
 <template>
 
-  <KFixedGrid
-    numCols="4"
-    class="page-status"
-    :style="{ backgroundColor: $themeTokens.surface }"
-  >
-    <KFixedGridItem span="3">
-      <div>
-        <h1 class="title">
-          <KLabeledIcon icon="person" :label="userName" />
-        </h1>
-        <KLabeledIcon icon="quiz" :label="contentName" />
-      </div>
+  <div>
+    <KFixedGrid
+      numCols="4"
+      class="page-status"
+      :style="{ backgroundColor: $themeTokens.surface }"
+    >
+      <KFixedGridItem span="3">
+        <div>
+          <h1 class="title">
+            <KLabeledIcon icon="person" :label="userName" />
+          </h1>
+          <KLabeledIcon icon="quiz" :label="contentName" />
+        </div>
 
-      <table class="scores">
-        <tr>
-          <th>
-            {{ $tr('overallScore') }}
-          </th>
-          <td>
-            <strong>
-              {{ $formatNumber(score, { style: 'percent' }) }}
-            </strong>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $tr('questionsCorrectLabel') }}
-          </th>
-          <td>
-            {{ $tr('questionsCorrectValue', {
-              correct: questionsCorrect, total: questions.length
-            }) }}
-          </td>
-        </tr>
-      </table>
-    </KFixedGridItem>
-    <KFixedGridItem span="1" alignment="right">
-      <div>
-        <ProgressIcon class="svg-icon" :progress="progress" />
-        <strong>
-          {{ progressIconLabel }}
-        </strong>
-      </div>
-      <div v-if="completed">
-        <ElapsedTime :date="completionTimestamp" />
-      </div>
-    </KFixedGridItem>
-  </KFixedGrid>
+        <table class="scores">
+          <tr>
+            <th>
+              {{ $tr('overallScore') }}
+            </th>
+            <td>
+              <strong>
+                {{ $formatNumber(score, { style: 'percent' }) }}
+              </strong>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              {{ $tr('questionsCorrectLabel') }}
+            </th>
+            <td>
+              {{ $tr('questionsCorrectValue', {
+                correct: questionsCorrect, total: questions.length
+              }) }}
+            </td>
+          </tr>
+        </table>
+      </KFixedGridItem>
+      <KFixedGridItem span="1" alignment="right">
+        <div>
+          <ProgressIcon class="svg-icon" :progress="progress" />
+          <strong>
+            {{ progressIconLabel }}
+          </strong>
+        </div>
+        <div v-if="completed">
+          <ElapsedTime :date="completionTimestamp" />
+        </div>
+        <div v-if="completed && retakeEnabled" class="retake-button">
+          <KButton
+            :text="$tr('retakeExamLabel')"
+            appearance="raised-button"
+            style="margin: 0 20px 0 0;"
+            primary="true"
+            @click="submitModalOpen = true"
+          />
+        </div>
+      </KFixedGridItem>
+    </KFixedGrid>
+    <KModal
+      v-if="submitModalOpen"
+      :title="$tr('areYouSure')"
+      :submitText="$tr('retakeExamLabel')"
+      :cancelText="coreString('goBackAction')"
+      @submit="recreateExamForStudent"
+      @cancel="cancel"
+    >
+      <p>{{ $tr('scoreWarning') }}</p>
+    </KModal>
+  </div>
 
 </template>
 
@@ -57,6 +78,9 @@
   import ProgressIcon from 'kolibri.coreVue.components.ProgressIcon';
   import ElapsedTime from 'kolibri.coreVue.components.ElapsedTime';
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
+  import { ExamLogResource, LearnerClassroomResource } from 'kolibri.resources';
+  import { mapGetters } from 'vuex';
+  import store from 'kolibri.coreVue.vuex.store';
 
   export default {
     name: 'PageStatus',
@@ -86,8 +110,22 @@
         type: String,
         required: true,
       },
+      examLog: {
+        type: Object,
+        required: false,
+      },
+      examAttempts: {
+        type: Array,
+        required: false,
+      },
+    },
+    data() {
+      return {
+        submitModalOpen: false,
+      };
     },
     computed: {
+      ...mapGetters(['isLearner']),
       questionsCorrect() {
         return this.questions.reduce((a, q) => a + (q.correct === 1 ? 1 : 0), 0);
       },
@@ -106,6 +144,46 @@
         } else {
           return this.$tr('notStartedLabel');
         }
+      },
+      retakeEnabled() {
+        // The Retake button is enabled only for leaners,
+        // the threshold should be kept in a proper conf and not here (TODO)
+        let isScoreBelowThreshold =
+          this.questions.reduce((a, q) => a + q.correct, 0) / this.questions.length || 0 < 90;
+        return this.isLearner && isScoreBelowThreshold;
+      },
+    },
+    methods: {
+      cancel() {
+        this.submitModalOpen = false;
+      },
+      recreateExamForStudent() {
+        this.submitModalOpen = false;
+        //Updates the ExamLog for the learner to reopen the exam for them
+        ExamLogResource.saveModel({
+          id: this.examLog.id,
+          data: {
+            exam: this.examLog.exam,
+            user: this.examLog.user,
+            completion_timestamp: null,
+            closed: false,
+          },
+        })
+          .then(() => {
+            // Redirect to exam page
+            this.$router.push(
+              this.$router.getRoute('EXAM_VIEWER', {
+                params: {
+                  examId: this.examLog.exam,
+                  classId: this.$route.params.classId,
+                  questionNumber: 0,
+                },
+              })
+            );
+          })
+          .catch(error => {
+            store.dispatch('handleApiError', error, { root: true });
+          });
       },
     },
     $trs: {
@@ -133,6 +211,19 @@
         message: 'Not started',
         context:
           "When a coach creates a quiz, by default it is marked as 'Not started'. This means that learners will not see it in the Learn > Classes view.\n\nThe coach needs to use the 'START QUIZ' button to enable learners to see the quiz and start answering the questions.",
+      },
+      retakeExamLabel: {
+        message: 'Retake',
+        context: 'When the total score is less than 90%, the learner can retake the exam again',
+      },
+      areYouSure: {
+        message: 'Are you sure?',
+        context: 'Message to confirm if thet learner want to go ahead and submit the choice',
+      },
+      scoreWarning: {
+        message: 'You will lose the current score.',
+        context:
+          'Message a learner sees when they wish to retake an exam indicating that they would lose the current score.',
       },
     },
   };
@@ -184,6 +275,10 @@
       padding-right: 24px;
       font-size: 14px;
     }
+  }
+
+  .retake-button {
+    padding-top: 32px;
   }
 
 </style>

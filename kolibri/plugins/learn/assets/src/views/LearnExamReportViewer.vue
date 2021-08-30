@@ -21,6 +21,7 @@
         :navigateToQuestionAttempt="navigateToQuestionAttempt"
         :questions="questions"
         :exerciseContentNodes="exerciseContentNodes"
+        :examLog="examLog"
       />
     </div>
     <div v-else>
@@ -61,6 +62,7 @@
         'itemId',
         'questionNumber',
         'questions',
+        'examLog',
       ]),
       ...mapState('examReportViewer', {
         classId: state => state.exam.collection,

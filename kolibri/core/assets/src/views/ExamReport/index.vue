@@ -8,6 +8,8 @@
         :questions="examAttempts"
         :completionTimestamp="completionTimestamp"
         :completed="closed"
+        :examLog="examLog"
+        :examAttempts="examAttempts"
       />
     </template>
 
@@ -142,6 +144,10 @@
       exerciseContentNodes: {
         type: Array,
         required: true,
+      },
+      examLog: {
+        type: Object,
+        required: false,
       },
     },
     data() {
