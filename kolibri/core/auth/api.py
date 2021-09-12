@@ -520,10 +520,11 @@ class ClassroomViewSet(ValuesViewset):
                 if coach["id"]:
                     coaches.append(coach)
             item["coaches"] = coaches
-            role = self.request.query_params["role"]
-            print(role)
-            if role == "facility" or role == "coach":
-                item["promotions"] =  get_promotion_list(role, classroom_id=item["id"])
+            if "role" in self.request.query_params:
+                role = self.request.query_params["role"]
+                print(role)
+                if role == "facility" or role == "coach":
+                    item["promotions"] =  get_promotion_list(role, classroom_id=item["id"])
             output.append(item)
         return output
 

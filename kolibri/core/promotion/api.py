@@ -43,7 +43,7 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
             if "id" not in request.data:
                 return self.handle_create(request, *args, **kwargs)
             else:
-                return self.handle_update(request)
+                return self.handle_update(request, is_many)
         ## handle multi items (list) requests        
         else:
             create_request = True
@@ -53,7 +53,7 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
             if create_request:
                 return self.handle_create(request, *args, **kwargs)
             else:
-                return self.handle_update(request)
+                return self.handle_update(request, is_many)
 
     
     def handle_create(self, request, *args, **kwargs):
@@ -66,14 +66,21 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
     def _perform_update(self, data, id):
         PromotionQueue.objects.filter(pk = id).update(**data)
 
-    def handle_update(self, request):   
+    def handle_update(self, request, is_many):   
         data = request.data
-        for val in data:
-            id = val["id"]
-            serialized = self.get_serializer(data=val, many=False)
+        if not is_many:
+            id = data["id"]
+            serialized = self.get_serializer(data=data, many=False)
             serialized.is_valid(raise_exception=True)
             self._perform_update(serialized.validated_data, id)
-        return Response(serialized.data, status=status.HTTP_200_OK) 
+            return Response(serialized.data, status=status.HTTP_200_OK) 
+        else:
+            for val in data:
+              id = val["id"]
+              serialized = self.get_serializer(data=val, many=False)
+              serialized.is_valid(raise_exception=True)
+              self._perform_update(serialized.validated_data, id)
+              return Response(serialized.data, status=status.HTTP_200_OK) 
              
 
 
