@@ -13,4 +13,5 @@ urlpatterns = [
     url(r"^discovery/", include("kolibri.core.discovery.api_urls")),
     url(r"^notifications/", include("kolibri.core.analytics.api_urls")),
     url(r"^public/", include("kolibri.core.public.api_urls")),
+    url(r"^promotion/", include("kolibri.core.promotion.api_urls")),
 ]

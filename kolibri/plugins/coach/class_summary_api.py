@@ -1,3 +1,4 @@
+from kolibri.core.promotion import serializer
 from django.db import connections
 from django.db.models import Count
 from django.db.models import F
@@ -26,6 +27,7 @@ from kolibri.core.notifications.models import LearnerProgressNotification
 from kolibri.core.notifications.models import NotificationEventType
 from kolibri.core.query import annotate_array_aggregate
 from kolibri.core.sqlite.utils import repair_sqlite_db
+from kolibri.core.promotion.utils import get_promotion_list
 
 
 # Intended to match  NotificationEventType
@@ -33,7 +35,6 @@ NOT_STARTED = "NotStarted"
 STARTED = "Started"
 HELP_NEEDED = "HelpNeeded"
 COMPLETED = "Completed"
-
 
 def content_status_serializer(lesson_data, learners_data, classroom):  # noqa C901
 
@@ -225,13 +226,12 @@ def serialize_lessons(queryset):
                 active=F("is_active"),
             ),
         )
-    )
+    ) 
 
 
 def _map_exam(item):
     item["assignments"] = item.pop("exam_assignments")
     return item
-
 
 def serialize_exams(queryset):
     queryset = annotate_array_aggregate(
@@ -256,8 +256,7 @@ def serialize_exams(queryset):
                 "exam_assignments",
             ),
         )
-    )
-
+    )  
 
 class ClassSummaryPermissions(permissions.BasePermission):
     """
@@ -290,7 +289,7 @@ class ClassSummaryViewSet(viewsets.ViewSet):
 
         lesson_data = serialize_lessons(query_lesson)
         exam_data = serialize_exams(query_exams)
-
+        promotion_data = get_promotion_list("coach", classroom_id=pk)
         individual_learners_group_ids = AdHocGroup.objects.filter(
             parent=classroom
         ).values_list("id", flat=True)
@@ -371,6 +370,7 @@ class ClassSummaryViewSet(viewsets.ViewSet):
                 lesson_data, learners_data, classroom
             ),
             "lessons": lesson_data,
+            "promotions": promotion_data,
         }
 
         return Response(output)

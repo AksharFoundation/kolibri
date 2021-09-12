@@ -66,6 +66,7 @@ from kolibri.core.api import ValuesViewset
 from kolibri.core.device.utils import allow_guest_access
 from kolibri.core.device.utils import allow_other_browsers_to_connect
 from kolibri.core.device.utils import valid_app_key_on_request
+from kolibri.core.promotion.utils import get_promotion_list
 from kolibri.core.logger.models import UserSessionLog
 from kolibri.core.mixins import BulkCreateMixin
 from kolibri.core.mixins import BulkDeleteMixin
@@ -519,6 +520,10 @@ class ClassroomViewSet(ValuesViewset):
                 if coach["id"]:
                     coaches.append(coach)
             item["coaches"] = coaches
+            role = self.request.query_params["role"]
+            print(role)
+            if role == "facility" or role == "coach":
+                item["promotions"] =  get_promotion_list(role, classroom_id=item["id"])
             output.append(item)
         return output
 
