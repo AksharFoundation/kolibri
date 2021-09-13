@@ -55,17 +55,20 @@ def create_new_promotion_entry(exam_log_id, request):
     user_data = serialize_user_data(user_queryset)
     classroom_query = Classroom.objects.filter(id = exam_data[0]["collection"])
     classroom_data = serialize_classroom_data(classroom_query)
-    promotionQueue = PromotionQueue(
+    PromotionQueue.objects.update_or_create(
         learner_id = exam_log_data[0]["user"],
-        learner_name = user_data[0]["full_name"],
-        classroom_id = exam_data[0]["collection"],
-        classroom_name = classroom_data[0]["name"],
-        facility_id = classroom_data[0]["parent"],
         quiz_id = exam_data[0]["id"],
-        quiz_name = exam_data[0]["title"],
-        quiz_score = quiz_score,
-        promotion_status = "REVIEW")
-    promotionQueue.save()
+        classroom_id = exam_data[0]["collection"],
+        facility_id = classroom_data[0]["parent"],   
+        defaults={
+            'learner_name' : user_data[0]["full_name"],
+            'classroom_name' : classroom_data[0]["name"],
+            'quiz_name' : exam_data[0]["title"],
+            'quiz_score' : quiz_score,
+            'promotion_status' : 'REVIEW',
+            'coach_approver' : None
+        },
+    )
  
 def serialize_exam_log(queryset):
     return queryset.values("exam", "user")
@@ -93,3 +96,12 @@ def serialize_classroom_data(queryset):
 def calculte_score(question_count, exam_attempt_data):
     correct_ans_count = sum(map(lambda x : x["correct"] == 1.0, exam_attempt_data))
     return correct_ans_count/question_count * 100.0
+
+
+def promotion_entry_already_exists(quiz_id, learner_id, classroom_id, facility_id):
+        return PromotionQueue.objects.filter(quiz_id = quiz_id, 
+        learner_id = learner_id, 
+        classroom_id = 
+        classroom_id, 
+        facility_id = facility_id)         
+
