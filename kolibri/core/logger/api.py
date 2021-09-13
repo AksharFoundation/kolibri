@@ -39,6 +39,7 @@ from kolibri.core.auth.models import FacilityUser
 from kolibri.core.auth.models import LearnerGroup
 from kolibri.core.content.api import OptionalPageNumberPagination
 from kolibri.core.exams.models import Exam
+from kolibri.core.promotion.utils import create_new_promotion_entry
 
 logger = logging.getLogger(__name__)
 
@@ -265,3 +266,14 @@ class ExamLogViewSet(viewsets.ModelViewSet):
     serializer_class = ExamLogSerializer
     pagination_class = OptionalPageNumberPagination
     filter_class = ExamLogFilter
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.queryset.get(pk=kwargs.get('pk'))
+        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        completed = request.data["closed"]
+        # if an exam is completed, add a promotion request if the learner is eligible
+        if completed:
+            create_new_promotion_entry(kwargs.get('pk'), request.data)
+        return Response(serializer.data)
