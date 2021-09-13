@@ -59,6 +59,7 @@ import * as licenseTranslations from '../utils/licenseTranslations';
 import bytesForHumans from '../utils/bytesForHumans';
 import UserType from '../utils/UserType';
 import samePageCheckGenerator from '../utils/samePageCheckGenerator';
+import updatePromotionQueueObjects from '../utils/updatePromotionQueueObjects';
 import AppBar from '../views/AppBar';
 import Backdrop from '../views/Backdrop';
 import CoreSnackbar from '../views/CoreSnackbar';
@@ -87,6 +88,7 @@ import PrivacyLinkAndModal from '../views/userAccounts/PrivacyLinkAndModal.vue';
 import PaginatedListContainer from '../views/PaginatedListContainer';
 import PageStatus from '../views/ExamReport/PageStatus';
 import branding from '../utils/branding';
+import PromotionNotification from '../views/promotion/PromotionNotification.vue';
 import sortLanguages from '../utils/sortLanguages';
 import * as sync from '../views/sync/syncComponentSet';
 
@@ -181,6 +183,7 @@ export default {
       PaginatedListContainer,
       PrivacyLinkAndModal,
       PageStatus,
+      PromotionNotification,
     },
     componentSets: {
       sync,
@@ -218,5 +221,6 @@ export default {
     sortLanguages,
     UserType,
     validators,
+    updatePromotionQueueObjects,
   },
 };

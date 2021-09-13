@@ -63,7 +63,7 @@
         </template>
       </CoreTable>
     </KPageContainer>
-
+    <PromotionNotification role="Coach" :promotions="promotionsList" /> 
   </CoreBase>
 
 </template>
@@ -75,10 +75,12 @@
   import find from 'lodash/find';
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
   import urls from 'kolibri.urls';
+  import PromotionNotification from 'kolibri.coreVue.components.PromotionNotification';
   import commonCoach from './common';
 
   export default {
     name: 'CoachClassListPage',
+    components: { PromotionNotification },
     mixins: [commonCoach, commonCoreStrings],
     computed: {
       ...mapGetters(['isAdmin', 'isClassCoach', 'isFacilityCoach', 'userIsMultiFacilityAdmin']),
@@ -96,6 +98,15 @@
         }
 
         return '';
+      },
+      promotionsList() {
+        let promotions = [];
+        for (var i in this.classList) {
+          if (Object.keys(this.classList[i]['promotions']).length > 0) {
+            promotions = promotions.concat(this.classList[i]['promotions']);
+          }
+        }
+        return promotions;
       },
       createClassUrl() {
         const facilityUrl = urls['kolibri:kolibri.plugins.facility:facility_management'];

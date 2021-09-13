@@ -5,7 +5,7 @@ export function showClassesPage(store, toRoute) {
   store.dispatch('preparePage');
   const facilityId = toRoute.params.facility_id || store.getters.activeFacilityId;
   return ClassroomResource.fetchCollection({
-    getParams: { parent: facilityId },
+    getParams: { parent: facilityId, role: 'facility' },
     force: true,
   }).only(
     samePageCheckGenerator(store),

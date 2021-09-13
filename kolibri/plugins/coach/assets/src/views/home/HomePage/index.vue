@@ -29,7 +29,10 @@
         <ActivityBlock />
       </KGridItem>
     </KGrid>
-
+    <PromotionNotification
+      :promotions="promotions"
+      role="Coach"
+    /> 
   </CoreBase>
 
 </template>
@@ -37,6 +40,7 @@
 
 <script>
 
+  import PromotionNotification from 'kolibri.coreVue.components.PromotionNotification';
   import commonCoach from '../../common';
   import OverviewBlock from './OverviewBlock';
   import ActivityBlock from './ActivityBlock';
@@ -50,6 +54,7 @@
       ActivityBlock,
       LessonsBlock,
       QuizzesBlock,
+      PromotionNotification,
     },
     mixins: [commonCoach],
   };

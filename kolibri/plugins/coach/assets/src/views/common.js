@@ -195,6 +195,7 @@ export default {
       'getLessonStatusTally',
       'getContentAvgTimeSpent',
       'getExamAvgScore',
+      'promotions',
     ]),
     userIsAuthorized() {
       if (this.isSuperuser) {

@@ -1,113 +1,116 @@
 <template>
 
-  <KPageContainer>
+  <div>
+    <KPageContainer>
 
-    <p>
-      <KRouterLink
-        v-if="userIsMultiFacilityAdmin"
-        :to="facilityPageLinks.AllFacilitiesPage"
-        icon="back"
-        :text="coreString('allFacilitiesLabel')"
-      />
-    </p>
-    <KGrid>
-      <KGridItem
-        :layout8="{ span: 6 }"
-        :layout12="{ span: 9 }"
-      >
-        <h1>{{ coreString('classesLabel') }}</h1>
-        <p>{{ $tr('adminClassPageSubheader') }}</p>
-      </KGridItem>
-      <KGridItem
-        :layout="{ alignment: 'right' }"
-        :layout8="{ span: 2 }"
-        :layout12="{ span: 3 }"
-      >
-        <KButton
-          :text="$tr('addNew')"
-          :primary="true"
-          class="move-down"
-          @click="displayModal(Modals.CREATE_CLASS)"
+      <p>
+        <KRouterLink
+          v-if="userIsMultiFacilityAdmin"
+          :to="facilityPageLinks.AllFacilitiesPage"
+          icon="back"
+          :text="coreString('allFacilitiesLabel')"
         />
-      </KGridItem>
-    </KGrid>
+      </p>
+      <KGrid>
+        <KGridItem
+          :layout8="{ span: 6 }"
+          :layout12="{ span: 9 }"
+        >
+          <h1>{{ coreString('classesLabel') }}</h1>
+          <p>{{ $tr('adminClassPageSubheader') }}</p>
+        </KGridItem>
+        <KGridItem
+          :layout="{ alignment: 'right' }"
+          :layout8="{ span: 2 }"
+          :layout12="{ span: 3 }"
+        >
+          <KButton
+            :text="$tr('addNew')"
+            :primary="true"
+            class="move-down"
+            @click="displayModal(Modals.CREATE_CLASS)"
+          />
+        </KGridItem>
+      </KGrid>
 
-    <CoreTable>
-      <caption class="visuallyhidden">
-        {{ $tr('tableCaption') }}
-      </caption>
-      <template #headers>
-        <th>{{ coreString('classNameLabel') }}</th>
-        <th>{{ coreString('coachesLabel') }}</th>
-        <th>{{ coreString('learnersLabel') }}</th>
-        <th>
-          <span class="visuallyhidden">
-            {{ $tr('actions') }}
-          </span>
-        </th>
-      </template>
-      <template #tbody>
-        <transition-group tag="tbody" name="list">
-          <tr
-            v-for="classroom in sortedClassrooms"
-            :key="classroom.id"
-          >
-            <td>
-              <KRouterLink
-                :text="classroom.name"
-                :to="classEditLink(classroom.id)"
-                icon="classes"
-              />
-            </td>
-            <td>
-              <span :ref="`coachNames${classroom.id}`">
-                <template v-if="coachNames(classroom).length">
-                  {{ formattedCoachNames(classroom) }}
-                </template>
-                <KEmptyPlaceholder v-else />
-              </span>
-              <KTooltip
-                v-if="formattedCoachNamesTooltip(classroom)"
-                :reference="`coachNames${classroom.id}`"
-                :refs="$refs"
-              >
-                {{ formattedCoachNamesTooltip(classroom) }}
-              </KTooltip>
-            </td>
+      <CoreTable>
+        <caption class="visuallyhidden">
+          {{ $tr('tableCaption') }}
+        </caption>
+        <template #headers>
+          <th>{{ coreString('classNameLabel') }}</th>
+          <th>{{ coreString('coachesLabel') }}</th>
+          <th>{{ coreString('learnersLabel') }}</th>
+          <th>
+            <span class="visuallyhidden">
+              {{ $tr('actions') }}
+            </span>
+          </th>
+        </template>
+        <template #tbody>
+          <transition-group tag="tbody" name="list">
+            <tr
+              v-for="classroom in sortedClassrooms"
+              :key="classroom.id"
+            >
+              <td>
+                <KRouterLink
+                  :text="classroom.name"
+                  :to="classEditLink(classroom.id)"
+                  icon="classes"
+                />
+              </td>
+              <td>
+                <span :ref="`coachNames${classroom.id}`">
+                  <template v-if="coachNames(classroom).length">
+                    {{ formattedCoachNames(classroom) }}
+                  </template>
+                  <KEmptyPlaceholder v-else />
+                </span>
+                <KTooltip
+                  v-if="formattedCoachNamesTooltip(classroom)"
+                  :reference="`coachNames${classroom.id}`"
+                  :refs="$refs"
+                >
+                  {{ formattedCoachNamesTooltip(classroom) }}
+                </KTooltip>
+              </td>
 
-            <td>
-              {{ $formatNumber(classroom.learner_count) }}
-            </td>
-            <td class="core-table-button-col">
-              <KButton
-                appearance="flat-button"
-                :text="$tr('deleteClass')"
-                @click="selectClassToDelete(classroom)"
-              />
-            </td>
-          </tr>
-        </transition-group>
-      </template>
-    </CoreTable>
+              <td>
+                {{ $formatNumber(classroom.learner_count) }}
+              </td>
+              <td class="core-table-button-col">
+                <KButton
+                  appearance="flat-button"
+                  :text="$tr('deleteClass')"
+                  @click="selectClassToDelete(classroom)"
+                />
+              </td>
+            </tr>
+          </transition-group>
+        </template>
+      </CoreTable>
 
-    <p v-if="noClassesExist">
-      {{ $tr('noClassesExist') }}
-    </p>
+      <p v-if="noClassesExist">
+        {{ $tr('noClassesExist') }}
+      </p>
 
-    <ClassDeleteModal
-      v-if="Boolean(classToDelete)"
-      :classToDelete="classToDelete"
-      @cancel="clearClassToDelete"
-      @success="handleDeleteSuccess()"
-    />
-    <ClassCreateModal
-      v-if="modalShown === Modals.CREATE_CLASS"
-      :classes="sortedClassrooms"
-      @cancel="closeModal"
-      @success="handleCreateSuccess()"
-    />
+      <ClassDeleteModal
+        v-if="Boolean(classToDelete)"
+        :classToDelete="classToDelete"
+        @cancel="clearClassToDelete"
+        @success="handleDeleteSuccess()"
+      />
+      <ClassCreateModal
+        v-if="modalShown === Modals.CREATE_CLASS"
+        :classes="sortedClassrooms"
+        @cancel="closeModal"
+        @success="handleCreateSuccess()"
+      />
 
-  </KPageContainer>
+    </KPageContainer>
+    <PromotionNotification role="FacilityAdmin" :promotions="promotionsList" /> 
+  </div>
 
 </template>
 
@@ -116,6 +119,7 @@
 
   import { mapState, mapActions, mapGetters } from 'vuex';
   import CoreTable from 'kolibri.coreVue.components.CoreTable';
+  import PromotionNotification from 'kolibri.coreVue.components.PromotionNotification';
   import orderBy from 'lodash/orderBy';
   import cloneDeep from 'lodash/cloneDeep';
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
@@ -135,6 +139,7 @@
       CoreTable,
       ClassCreateModal,
       ClassDeleteModal,
+      PromotionNotification,
     },
     mixins: [commonCoreStrings],
     setup() {
@@ -154,6 +159,16 @@
       Modals: () => Modals,
       sortedClassrooms() {
         return orderBy(this.classes, [classroom => classroom.name.toUpperCase()], ['asc']);
+      },
+      promotionsList() {
+        let promotions = [];
+        for (var i in this.classes) {
+          if (Object.keys(this.classes[i]['promotions']).length > 0) {
+            promotions = promotions.concat(this.classes[i]['promotions']);
+          }
+        }
+        console.log(promotions);
+        return promotions;
       },
     },
     methods: {

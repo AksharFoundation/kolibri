@@ -87,6 +87,8 @@ function defaultState() {
      * }
      */
     lessonMap: {},
+
+    promotionMap: {},
   };
 }
 
@@ -215,6 +217,10 @@ export default {
     exams(state) {
       return Object.values(state.examMap);
     },
+
+    promotions(state) {
+      return Object.values(state.promotionMap);
+    },
     /*
      * examStatuses := [
      *   { exam_id, learner_id, status, last_activity }, ...
@@ -327,6 +333,7 @@ export default {
         classId: state.id,
         className: state.name,
         contentNodes: state.contentNodeMap,
+        promotions: state.promotionMap,
       };
     },
   },
@@ -334,6 +341,7 @@ export default {
     SET_STATE(state, summary) {
       const examMap = _itemMap(summary.exams, 'id');
       const lessonMap = _itemMap(summary.lessons, 'id');
+      const promotionMap = _itemMap(summary.promotions, 'id');
       Object.values(examMap).forEach(exam => {
         // convert dates
         exam.date_created = new Date(exam.date_created);
@@ -365,6 +373,7 @@ export default {
         contentNodeMap: _itemMap(summary.content, 'node_id'),
         contentLearnerStatusMap: _statusMap(summary.content_learner_status, 'content_id'),
         lessonMap,
+        promotionMap,
       });
     },
     CREATE_ITEM(state, { map, id, object }) {
