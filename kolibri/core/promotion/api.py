@@ -9,8 +9,9 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import PromotionQueue
+from .utils import get_next_classroom_id
 from .serializer import PromotionQueueSerializer
-from kolibri.core.auth.models import Collection
+from kolibri.core.auth.models import Collection, FacilityUser, Membership
 from kolibri.core.auth.constants import role_kinds
 
 
@@ -57,6 +58,7 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
 
     
     def handle_create(self, request, *args, **kwargs):
+        PromotionQueue.objects.all().delete()
         serialized = self.get_serializer(data=request.data, many=isinstance(request.data, list))
         serialized.is_valid(raise_exception=True)
         self.perform_create(serialized)
@@ -73,6 +75,8 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
             serialized = self.get_serializer(data=data, many=False)
             serialized.is_valid(raise_exception=True)
             self._perform_update(serialized.validated_data, id)
+            if serialized.validated_data["promotion_status"] == "APPROVED":
+                self._move_student_to_next_level(serialized.validated_data["classroom_id"], serialized.validated_data["classroom_name"], serialized.validated_data["learner_id"])
             return Response(serialized.data, status=status.HTTP_200_OK) 
         else:
             for val in data:
@@ -83,6 +87,16 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
               return Response(serialized.data, status=status.HTTP_200_OK) 
              
 
+    def _move_student_to_next_level(self, classroom_id, classroom_name, learner_id):
+        next_classroom_id = get_next_classroom_id(classroom_name)
+        Membership.objects.filter(collection= classroom_id, user = learner_id).delete()
+        facilyUser = FacilityUser.objects.filter(id = learner_id)
+        collection = Collection.objects.filter(id = next_classroom_id)
+        Membership.objects.get_or_create(collection =  collection[0], user = facilyUser[0])         
+
+
+    def serialise_facility_user(queryset):
+        return queryset.values("FacilityUser")
 
 
     

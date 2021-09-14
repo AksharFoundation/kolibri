@@ -12,7 +12,7 @@ ROLE_FACILTY_ADMIN = "facility"
 STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED", "RECOMMENDED"]
 STATUS_TO_BE_INCLUDED_FOR_ADMIN =  "RECOMMENDED"
 PASS_SCORE = 10.0
-
+CLASS_LIST = ["Class 3 Math", "Class 4 Math"]
 
 def get_promotion_list(role, **kwargs):
     if role == ROLE_COACH:
@@ -90,7 +90,7 @@ def serialize_user_data(queryset):
     return queryset.values("full_name")        
 
 def serialize_classroom_data(queryset):
-    return queryset.values("name", "parent")       
+    return queryset.values("name", "parent", "id")       
 
 
 def calculte_score(question_count, exam_attempt_data):
@@ -105,3 +105,9 @@ def promotion_entry_already_exists(quiz_id, learner_id, classroom_id, facility_i
         classroom_id, 
         facility_id = facility_id)         
 
+def get_next_classroom_id(classroom):
+    index = CLASS_LIST.index(classroom)
+    next_classroom_name =  CLASS_LIST[index + 1]    
+    classroom_query = Classroom.objects.filter(name =  next_classroom_name)    
+    classroom_data = serialize_classroom_data(classroom_query)
+    return classroom_data[0]["id"]
