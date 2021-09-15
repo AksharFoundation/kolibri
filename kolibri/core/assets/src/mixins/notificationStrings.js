@@ -104,6 +104,19 @@ export default createTranslator('NotificationStrings', {
     message: 'Group deleted',
     context: 'Deleting a learner group',
   },
+  learnerRecommendedForPromotion: {
+    message:
+      '{count, number} {count, plural, one {learner recommended} other {learners recommended}}',
+    context: 'Recommending a specified number of learner for promotion',
+  },
+  learnerApprovedForPromotion: {
+    message: '{count, number} {count, plural, one {learner approved} other {learners approved}}',
+    context: 'Approving a specified number of learner for promotion',
+  },
+  learnerDeniedForPromotion: {
+    message: '{count, number} {count, plural, one {learner denied} other {learners denied}}',
+    context: 'Denying a specified number of learner for promotion',
+  },
   // TODO move more messages into this namespace:
   // - "Quiz started"
   // - "Quiz Ended"
