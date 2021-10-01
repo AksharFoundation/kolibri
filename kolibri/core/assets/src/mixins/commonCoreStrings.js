@@ -231,8 +231,9 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
       "An 'Identifier' could be a student ID number or an existing user identification number. This is an optional field in the user create/edit screen.",
   },
   inProgressLabel: 'In progress',
+  //Rebranding to Akshar. Keeping the variable name as it is.
   kolibriLabel: {
-    message: 'Kolibri',
+    message: 'Akshar',
     context:
       'This proper noun is the name of the learning platform, and is pronounced ko-lee-bree (/kolibɹi/). For languages with non-latin scripts, the word should be transcribed phonetically into the target language, similar to a person\'s name. It should not be translated as "hummingbird".',
   },

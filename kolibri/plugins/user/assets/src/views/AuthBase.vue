@@ -20,7 +20,7 @@
             <h1
               v-if="$kolibriBranding.signIn.showTitle"
               class="kolibri-title"
-              :class="$computedClass({ color: $themeBrand.primary.v_300 })"
+              :class="$computedClass({ color: $themePalette.lightgreen.v_800 })"
               :style="$kolibriBranding.signIn.titleStyle"
             >
               {{ logoText }}
@@ -42,7 +42,7 @@
             <h1
               v-if="$kolibriBranding.signIn.showTitle"
               class="kolibri-title"
-              :class="$computedClass({ color: $themeBrand.primary.v_300 })"
+              :class="$computedClass({ color: $themePalette.lightgreen.v_800 })"
               :style="$kolibriBranding.signIn.titleStyle"
             >
               {{ logoText }}
@@ -100,8 +100,16 @@
         <div class="footer-cell table-cell" :style="{ backgroundColor: $themeTokens.surface }">
           <LanguageSwitcherFooter />
           <div class="small-text">
-            <span class="version-string">
+            <span class="kolibri-credit-string">
               {{ versionMsg }}
+              <span> • </span>
+              <KExternalLink
+                :text="$tr('poweredByKolibri')"
+                :href="kolibriURL"
+                :primary="true"
+                appearance="basic-link"
+                :openInNewTab="true"
+              />
             </span>
             <CoreLogo
               v-if="$kolibriBranding.signIn.showKolibriFooterLogo"
@@ -208,6 +216,9 @@
       guestURL() {
         return urls['kolibri:core:guest']();
       },
+      kolibriURL() {
+        return this.$tr('kolibriLink');
+      },
       canSignUp() {
         return this.facilityConfig.learner_can_sign_up;
       },
@@ -231,9 +242,8 @@
         return [...loginComponents];
       },
       logoText() {
-        return this.$kolibriBranding.signIn.title
-          ? this.$kolibriBranding.signIn.title
-          : this.coreString('kolibriLabel');
+        // not displaying any logo text since akshar's logo itself is composed of text
+        return '';
       },
       oidcProviderFlow() {
         return plugin_data.oidcProviderEnabled && this.nextParam;
@@ -249,6 +259,11 @@
       this.$kolibriBranding = branding;
     },
     $trs: {
+      kolibriLink: {
+        message: 'https://learningequality.org/kolibri/',
+        context:
+          'Link on sign in page which upon clicking takes user to Kolibri website, the base platform on top of which Akshar app is build',
+      },
       accessAsGuest: {
         message: 'Explore without account',
         context:
@@ -267,7 +282,7 @@
           'Explanation of Kolibri that a user sees if they are sent to Kolibri from a different application.',
       },
       poweredBy: {
-        message: 'Kolibri {version}',
+        message: 'Akshar {version}',
         context:
           'Indicates the current version of Kolibri.\n\nFor languages with non-latin scripts, Kolibri should be transcribed phonetically into the target language, similar to a person\'s name. It should not be translated as "hummingbird".',
       },
@@ -358,7 +373,7 @@
     font-size: 0.8em;
   }
 
-  .version-string {
+  .kolibri-credit-string {
     white-space: nowrap;
   }
 
