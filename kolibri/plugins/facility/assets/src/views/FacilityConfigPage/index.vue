@@ -246,24 +246,24 @@
       // are used to get the keys to these strings.
       /* eslint-disable kolibri/vue-no-unused-translations */
       learnerCanEditName: {
-        message: 'Allow learners to edit their full name',
+        message: 'Allow students to edit their full name',
         context: "Option on 'Facility settings' page.",
       },
       learnerCanEditPassword: {
-        message: 'Allow learners to edit their password when signed in',
+        message: 'Allow students to edit their password when signed in',
         context: "Option on 'Facility settings' page.",
       },
       learnerCanEditUsername: {
-        message: 'Allow learners to edit their username',
+        message: 'Allow students to edit their username',
         context: "Option on 'Facility settings' page.",
       },
       learnerCanSignUp: {
-        message: 'Allow learners to create accounts',
+        message: 'Allow students to create accounts',
         context: "Option on 'Facility settings' page.",
       },
-      learnerCanLoginWithNoPassword: 'Allow learners to sign in with no password',
+      learnerCanLoginWithNoPassword: 'Allow students to sign in with no password',
       learnerNeedPasswordToLogin: {
-        message: 'Require password for learners',
+        message: 'Require password for students',
         context: "Option on 'Facility settings' page.",
       },
       showDownloadButtonInLearn: {

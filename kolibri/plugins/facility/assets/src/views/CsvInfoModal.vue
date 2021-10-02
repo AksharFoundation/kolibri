@@ -207,7 +207,7 @@
           "Refers to values in the 'Birth year' column of the CSV (comma separated values) file used to import and export users.\n",
       },
       listClassesEnrolled: {
-        message: 'Classes to enroll the user in as a learner:',
+        message: 'Classes to enroll the user in as a student:',
         context:
           "Refers to values in the 'Learner enrollment' column of the CSV (comma separated values) file used to import and export users.\n",
       },
@@ -229,12 +229,12 @@
           'Refers to values in a column of the CSV (comma separated values) file used to import users. When a CSV file contains a class name that is not present in the database, import command will create it.',
       },
       listClassesAssigned: {
-        message: 'Classes to which the user will be assigned as a coach:',
+        message: 'Classes to which the user will be assigned as a teacher:',
         context:
           'Description of a column in the CSV (comma separated values) file used to import and export users. Values in this column indicate classes where a coach user will be assigned to.',
       },
       listClassesAssignedL1: {
-        message: 'Do not use for learner users',
+        message: 'Do not use for students users',
         context:
           'Refers to values in a column of the CSV (comma separated values) file used to import and export users.',
       },
@@ -303,12 +303,12 @@
           "Optional column that can be used on an imported spreadsheet.\n\nUsers see this information by clicking on the 'View spreadsheet format reference' link.",
       },
       enrolled: {
-        message: 'Learner enrollment',
+        message: 'Student enrollment',
         context:
           "Optional column that can be used on an imported spreadsheet.\n\nUsers see this information by clicking on the 'View spreadsheet format reference' link.",
       },
       assigned: {
-        message: 'Coach assignment',
+        message: 'Teacher assignment',
         context:
           "Optional column that can be used on an imported spreadsheet.\n\nUsers see this information by clicking on the 'View spreadsheet format reference' link.",
       },

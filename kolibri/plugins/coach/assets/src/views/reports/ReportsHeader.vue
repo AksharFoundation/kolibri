@@ -64,7 +64,7 @@
           "Tab name of the main 'Class' section where the coach can see all the information relating to a specific class.\n",
       },
       description: {
-        message: 'View reports for your learners and class materials',
+        message: 'View reports for your students and class materials',
         context: "Description for the 'Reports' section.",
       },
     },

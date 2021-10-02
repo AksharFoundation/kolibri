@@ -109,7 +109,7 @@
           'Message presented to any user *without* admin or coach permissions who accidentally lands on a Kolibri page that is reserved for admins or coaches.',
       },
       learner: {
-        message: 'You must be signed in as a learner to view this page',
+        message: 'You must be signed in as a student to view this page',
         context:
           'Message presented to any user who is *not* signed in as a learner when they attempt to view a page that is reserved for learners.',
       },

@@ -272,7 +272,7 @@
         context: 'Refers to quiz questions.',
       },
       preview: {
-        message: 'Preview quiz',
+        message: 'Preview exam',
         context:
           'When coaches have finished selecting resources for a quiz, they can preview the quiz to see what it looks like.',
       },

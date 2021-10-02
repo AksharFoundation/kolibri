@@ -243,7 +243,7 @@
       noActiveLessons: 'No active lessons',
       noInactiveLessons: 'No inactive lessons',
       visibleToLearnersLabel: {
-        message: 'Visible to learners',
+        message: 'Visible to students',
         context:
           'Column header for table of lessons which will include a toggle switch the user can use to set the visibility status of a lesson.',
       },

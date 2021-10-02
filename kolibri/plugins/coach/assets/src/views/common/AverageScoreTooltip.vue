@@ -19,7 +19,7 @@
     },
     $trs: {
       visibleToLearnersTooltipMessage: {
-        message: 'Calculated only from quizzes that were completed',
+        message: 'Calculated only from exams that were completed',
         context:
           'A message for a tooltip that shows when the user hovers over a small icon that tells the user that the Average Quiz Score is calculated only using quizzes that learners completed.',
       },

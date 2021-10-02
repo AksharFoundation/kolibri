@@ -24,7 +24,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       "In the Plan > Lessons section, coaches can create new lessons using the 'New lesson' button.",
   },
   newQuizAction: {
-    message: 'New quiz',
+    message: 'New Exam',
     context:
       "In the Plan > Quizzes section, coaches can create new quizzes using the 'New quiz' button.",
   },
@@ -61,7 +61,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       "'Activity' refers to the section in Kolobri which provides real time notifications of what's happening with the learners in a class.",
   },
   allQuizzesLabel: {
-    message: 'All quizzes',
+    message: 'All exams',
     context: 'Navigation link that takes coach back to the list of all the classes they manage.',
   },
   avgScoreLabel: {
@@ -75,7 +75,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       "In the selected lesson 'Report' sub-tab, coaches can see the average time that has been spent on a resource by a specific class.",
   },
   avgQuizScoreLabel: {
-    message: 'Average quiz score',
+    message: 'Average exam score',
     context:
       "The average score of a class's quiz results. This is calculated only from quizzes that were completed by learners.\n",
   },
@@ -94,17 +94,17 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       'A class is a group of enrolled learners and assigned coaches, created and managed by an admin.\n\nCoaches can assign lessons and quizzes to the learners in a class, and view reports of their progress and performance.',
   }, // Kept for use in common.js
   coachLabel: {
-    message: 'Coach',
+    message: 'Teacher',
     context:
       'An account type that has the permission to manage lessons and quizzes within a class and track the progress and performance of learners enrolled in the class. We intentionally did not use the term "teacher" in order to be inclusive of non-formal education contexts.',
   }, // Kept here for use in common.js
   coachLabelWithOneName: {
-    message: 'Coach – {name}',
+    message: 'Teacher – {name}',
     context:
       "Indicates the name of the coach who is assigned to a specific class. Only translate 'Coach'.",
   },
   coachLabelWithOneTwoNames: {
-    message: 'Coach – {name1} – {name2}',
+    message: 'Teacher – {name1} – {name2}',
     context:
       "Indicates the names of the coaches who are assigned to a specific class if there are more than one. Only translate 'Coach'.",
   },
@@ -157,7 +157,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
   },
   inactiveLabel: 'Inactive',
   learnersLabel: {
-    message: 'Learners',
+    message: 'Students',
     context:
       'Learner is an account type that has limited permissions. Learners can be enrolled in classes, get assigned resources through lessons and quizzes, and navigate channels directly. We intentionally did not use the term "student" to be more inclusive of non-formal educational contexts.',
   }, // Kept here for use in common.js
@@ -200,7 +200,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       "Description of the 'Fixed' question order. To present the same (fixed) question order to all learners, coaches select 'Fixed'.",
   },
   orderFixedDescription: {
-    message: 'Each learner sees the same question order',
+    message: 'Each student sees the same question order',
     context:
       "Coaches can choose between 'Randomized' and 'Fixed' question order when they create quizzes. \n\nThis text is a description of the 'Fixed' question order.",
   },
@@ -210,7 +210,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       "Description of the 'Randomized' question order. To present the questions in a different (random) order to each learner, coaches select 'Randomized'.",
   },
   orderRandomDescription: {
-    message: 'Each learner sees a different question order',
+    message: 'Each student sees a different question order',
     context:
       "Coaches can choose between 'Randomized' and 'Fixed' question order when they create quizzes.\n\nThis text is a description of the 'Randomized' question order.",
   },
@@ -233,16 +233,16 @@ const coachStrings = createTranslator('CommonCoachStrings', {
     context: 'Indicates the window where the coach can choose the question order for a quiz.',
   },
   quizClosedLabel: {
-    message: 'Quiz ended',
+    message: 'Exam ended',
     context:
       'A label indicating that the currently viewed quiz is ended - meaning that learners will no longer be able to give answers to the quiz.',
   },
   quizzesLabel: {
-    message: 'Quizzes',
+    message: 'Exams',
     context: 'Plural of quiz.',
   }, // Kept here for use in common.js
   quizzesAssignedLabel: {
-    message: 'Quizzes assigned',
+    message: 'Exams assigned',
     context:
       'Indicates which quizzes have been assigned to a learner or a group in the report section.',
   },
@@ -289,7 +289,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
     context: 'Indicates the time a learner has taken on a specific learning resource.',
   },
   ungroupedLearnersLabel: {
-    message: 'Ungrouped learners',
+    message: 'Ungrouped students',
     context: 'Refers to learners who are not part of a specific group.',
   },
 
@@ -322,7 +322,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
     context: 'Displays when no groups have been created in the Plan > Groups tab.',
   },
   learnerListEmptyState: {
-    message: 'There are no learners',
+    message: 'There are no students',
     context: 'Message displayed when there are no learners enrolled in a class.',
   },
   lessonListEmptyState: {
@@ -334,7 +334,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
     context: 'Message that displays when no questions have been added to a quiz.',
   },
   quizListEmptyState: {
-    message: 'There are no quizzes',
+    message: 'There are no exams',
     context:
       'When no quizzes have been created this message will display in the class information screen.',
   },
@@ -378,7 +378,7 @@ const coachStrings = createTranslator('CommonCoachStrings', {
 
   // Errors
   quizDuplicateTitleError: {
-    message: 'A quiz with that name already exists',
+    message: 'An exam with that name already exists',
     context:
       'Error message which displays if user tries to use the same title for a quiz as one that has already been created.',
   },
@@ -395,64 +395,64 @@ const coachStrings = createTranslator('CommonCoachStrings', {
       'A label used on a switch indicating that the learners can see their reports when the switch is turned "on"',
   },
   quizOpenedMessage: {
-    message: 'Quiz started',
+    message: 'Exam started',
     context: 'A brief snackbar message notifying the user that the quiz was successfully started.',
   },
   quizFailedToOpenMessage: {
-    message: 'There was a problem starting the quiz. The quiz was not started.',
+    message: 'There was a problem starting the exam. The exam was not started.',
     context:
       'A brief snackbar message notifying the user that there was an error trying to start the quiz and that the quiz was not started.',
   },
   quizClosedMessage: {
-    message: 'Quiz ended',
+    message: 'Exam ended',
     context: 'A brief snackbar message notifying the user that the quiz was successfully ended.',
   },
   quizFailedToCloseMessage: {
-    message: 'There was a problem ending the quiz. The quiz was not ended.',
+    message: 'There was a problem ending the exam. The exam was not ended.',
     context:
       'A brief snackbar message notifying the user that there was an error trying to end the quiz and that the quiz was not ended.',
   },
   quizVisibleToLearners: {
-    message: 'Quiz report is visible to learners',
+    message: 'Exam report is visible to students',
     context:
       'A brief snackbar message notifying the user that learners may view their quiz report. It will show when the user changes a setting to make the quiz visible.',
   },
   quizNotVisibleToLearners: {
-    message: 'Quiz report is not visible to learners',
+    message: 'Exam report is not visible to students',
     context:
       'A brief snackbar message notifying the user that learners may no longer view their quiz report. It will show when the user changes a setting to make the quiz no longer visible.',
   },
   openQuizLabel: {
-    message: 'Start quiz',
+    message: 'Start exam',
     context:
       "Label for a button that, when clicked, will 'start' a quiz - making it active so that Learners may take the quiz.",
   },
   openQuizModalDetail: {
     message:
-      'Starting the quiz will make it visible to learners and they will be able to answer questions',
+      'Starting the exam will make it visible to students and they will be able to answer questions',
 
     context:
       "Text shown on a modal pop-up window when the user clicks the 'Start Quiz' button. This explains what will happen when the user confirms the action of starting the quiz.",
   },
   closeQuizLabel: {
-    message: 'End quiz',
+    message: 'End exam',
     context:
       "Label for a button that, when clicked, will 'end' a quiz. This makes the quiz inactive and Learners will no longer be able to give answers.",
   },
   closeQuizModalDetail: {
     message:
-      'All learners will be given a final score and a quiz report. Unfinished questions will be counted as incorrect.',
+      'All students will be given a final score and an exam report. Unfinished questions will be counted as incorrect.',
 
     context:
       "Text shown on a modal pop-up window when the user clicks the 'End Quiz' button. This explains what will happen when the modal window is confirmed.",
   },
   lessonNotVisibleToLearnersLabel: {
-    message: 'Lesson is not visible to learners',
+    message: 'Lesson is not visible to students',
     context:
       'Snackbar message telling the user that the lesson is now not visible to learners. This will display whenever the user changes the lesson from visible to not visible.',
   },
   lessonVisibleToLearnersLabel: {
-    message: 'Lesson is visible to learners',
+    message: 'Lesson is visible to students',
     context:
       'Snackbar message telling the user that the lesson is now visible to learners. This will display whenever the user changes the lesson from not visible to visible.',
   },
@@ -476,7 +476,7 @@ const MissingContentStrings = createTranslator('MissingContentStrings', {
   },
   resourcesUnavailableP1: {
     message:
-      'Some report data is missing, either because there are resources that were not found on the device, or because they are not compatible with your version of Kolibri.',
+      'Some report data is missing, either because there are resources that were not found on the device, or because they are not compatible with your version of Akshar.',
 
     context: 'First paragraph of the "Resources Unavailable - Learn More" modal',
   },
@@ -487,12 +487,12 @@ const MissingContentStrings = createTranslator('MissingContentStrings', {
     context: 'Second paragraph of the "Resources Unavailable - Learn More" modal',
   },
   upgradeKolibriTitle: {
-    message: 'Upgrade Kolibri to view resources',
+    message: 'Upgrade Akshar to view resources',
     context: 'Title of the modal window',
   },
   upgradeKolibriP1: {
     message:
-      'Some resources are not supported by this version of Kolibri. You may need to upgrade to view them.',
+      'Some resources are not supported by this version of Akshar. You may need to upgrade to view them.',
 
     context: 'First paragraph of the "Upgrade Kolibri to view resources" modal',
   },

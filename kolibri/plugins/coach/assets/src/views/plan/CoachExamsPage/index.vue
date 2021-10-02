@@ -265,13 +265,13 @@
     },
     $trs: {
       noExams: {
-        message: 'You do not have any quizzes',
+        message: 'You do not have any exam',
         context: 'CoachExamsPage.noExams\n\n-- CONTEXT --',
       },
-      noActiveExams: 'No active quizzes',
-      noInactiveExams: 'No inactive quizzes',
-      newQuiz: 'Create new quiz',
-      selectQuiz: 'Select channel quiz',
+      noActiveExams: 'No active exams',
+      noInactiveExams: 'No inactive exams',
+      newQuiz: 'Create new exam',
+      selectQuiz: 'Select channel exam',
     },
   };
 

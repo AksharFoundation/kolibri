@@ -150,7 +150,7 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
       'Channels are collections of educational resources (video, audio, document files or interactive apps) prepared and organized by the channel curator for their use in Kolibri. A learner will see a set of channels available to them when they first open Kolibri.',
   },
   classCoachLabel: {
-    message: 'Class coach',
+    message: 'Teacher',
     context:
       'When you create a new coach or change the user type to coach for an existing user, you can choose between class coach and facility coach.\n\nA class coach has access to the coach dashboard and permissions to instruct only the learners in the classes they are assigned to.',
   },
@@ -164,12 +164,12 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
       'In the classes section of Kolibri users can view the list of all the classes in their facility, with the number of enrolled users for each class, and the coaches assigned.',
   },
   coachLabel: {
-    message: 'Coach',
+    message: 'Teacher',
     context:
       'A coach is a specific type of user in Kolibri who can manage  classes and learners. A coach can be either a class coach or a facility coach.',
   },
   coachesLabel: {
-    message: 'Coaches',
+    message: 'Teachers',
     context:
       "In a list of classes, users can see which coaches manage which specific classes in the 'Coaches' column.",
   },
@@ -189,7 +189,7 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
       'A user can grant permission to another user to manage channels and resources in Kolibri, that is to import, export and delete them from the device used.',
   },
   facilityCoachLabel: {
-    message: 'Facility coach',
+    message: 'Facility Teacher',
     context:
       'A type of coach account that has permission to view and manage all classes in a facility.',
   },
@@ -238,12 +238,12 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
       'This proper noun is the name of the learning platform, and is pronounced ko-lee-bree (/kolibɹi/). For languages with non-latin scripts, the word should be transcribed phonetically into the target language, similar to a person\'s name. It should not be translated as "hummingbird".',
   },
   learnerLabel: {
-    message: 'Learner',
+    message: 'Student',
     context:
       'Learner is an account type that has limited permissions. Learners can be enrolled in classes, get assigned resources through lessons and quizzes, and navigate channels directly.\n\nWe intentionally did not use the term "student" to be more inclusive of non-formal educational contexts.',
   },
   learnersLabel: {
-    message: 'Learners',
+    message: 'Students',
     context: 'Plural of learner.',
   },
   lessonsLabel: {
@@ -283,7 +283,7 @@ export const coreStrings = createTranslator('CommonCoreStrings', {
     context: 'Indicates the question number in a quiz that a learner could be taking.',
   },
   quizzesLabel: {
-    message: 'Quizzes',
+    message: 'Exams',
     context:
       'A quiz is a summative assessment made up of questions taken from exercises. Quizzes are created by coaches and then assigned to learners in a class.\n\nWe intentionally renamed "exam" to "quiz" in order to encourage use as an informal diagnostic tool for teachers.',
   },

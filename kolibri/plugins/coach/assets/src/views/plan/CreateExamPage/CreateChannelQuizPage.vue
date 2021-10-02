@@ -127,9 +127,9 @@
       },
     },
     $trs: {
-      createNewExamLabel: 'Create new quiz',
-      selectChannelQuizLabel: 'Select a channel quiz',
-      channelsWithQuizzesLabel: 'The following channels contain pre-made quizzes',
+      createNewExamLabel: 'Create new exam',
+      selectChannelQuizLabel: 'Select a channel Exam',
+      channelsWithQuizzesLabel: 'The following channels contain pre-made exams',
       selectionInformation:
         '{count, number, integer} of {total, number, integer} {total, plural, one {resource selected} other {resources selected}}',
     },

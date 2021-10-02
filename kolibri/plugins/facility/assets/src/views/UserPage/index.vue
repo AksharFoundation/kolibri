@@ -234,12 +234,12 @@
         context: "Option to reset a user's password.",
       },
       noLearnersExist: {
-        message: 'No learners exist',
+        message: 'No students exist',
         context:
           "Displayed when there are no learners in the facility. Seen when using the 'User type' filter on the 'Users' page.",
       },
       noCoachesExist: {
-        message: 'No coaches exist',
+        message: 'No teachers exist',
         context:
           "Displayed when there are no coaches in the facility. Seen when using the 'User type' filter on the 'Users' page.",
       },

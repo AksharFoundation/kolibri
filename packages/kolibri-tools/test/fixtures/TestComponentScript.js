@@ -50,11 +50,11 @@ export default {
     },
   },
   $trs: {
-    classPageSubheader: 'View learner progress and class performance',
+    classPageSubheader: 'View student progress and class performance',
     classNameLabel: 'Class name',
     noAssignedClassesHeader: "You aren't assigned to any classes",
     noAssignedClassesDetails: 'Please consult your Kolibri administrator to be assigned to a class',
-    noClassesDetailsForAdmin: 'Create a class and enroll learners',
+    noClassesDetailsForAdmin: 'Create a class and enroll students',
     noClassesDetailsForFacilityCoach: 'Please consult your Kolibri administrator',
     noClassesInFacility: 'There are no classes yet',
   },

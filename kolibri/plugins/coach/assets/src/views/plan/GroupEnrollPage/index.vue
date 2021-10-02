@@ -191,7 +191,7 @@
     },
     $trs: {
       pageHeader: {
-        message: "Enroll learners into '{className}'",
+        message: "Enroll students into '{className}'",
         context: 'Describes title of page where the coach enrolls learners in a new group.',
       },
       searchForUser: {
