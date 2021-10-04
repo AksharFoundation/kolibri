@@ -9,13 +9,11 @@
   >
     <div v-if="multipleLearnerSelect">
       {{ modalConfirmationMessage }}
-      <KKTextbox label="learnersList" disabled="true"> 
-        <ul>
-          <li v-for="learner in selectedPromotionList" :key="learner.id">
-            {{ learner.learner_name }}
-          </li>
-        </ul>
-      </KKTextbox>
+      <ul>
+        <li v-for="learner in selectedLearners" :key="learner.id">
+          {{ learner.learner_name }}
+        </li>
+      </ul>
     </div>
     <div v-if="!multipleLearnerSelect">
       <tbody>
@@ -53,7 +51,7 @@
         type: Boolean,
         required: true,
       },
-      selectedPromotionList: {
+      selectedLearners: {
         type: Object,
         required: true,
       },
@@ -61,7 +59,7 @@
     computed: {
       modalConfirmationMessage() {
         if (this.multipleLearnerSelect) {
-          let count = Object.keys(this.selectedPromotionList).length;
+          let count = Object.keys(this.selectedLearners).length;
           if (this.approveSelected) {
             return this.$tr('multiLearnerApprovalConfirmatioMessage', {
               count: count,
@@ -72,7 +70,7 @@
             });
           }
         } else {
-          let learner = Object.values(this.selectedPromotionList)[0].learner_name;
+          let learner = Object.values(this.selectedLearners)[0].learner_name;
           if (this.approveSelected) {
             return this.$tr('singleLearnerApprovalConfirmatioMessage', {
               learner: learner,
@@ -85,8 +83,8 @@
         }
       },
       singleLearnerDetails() {
-        let quizScore = Object.values(this.selectedPromotionList)[0].quiz_score;
-        let lessonCompletion = Object.values(this.selectedPromotionList)[0].quiz_score;
+        let quizScore = Object.values(this.selectedLearners)[0].quiz_score;
+        let lessonCompletion = Object.values(this.selectedLearners)[0].quiz_score;
         return this.$tr('singleLearnerDetails', {
           quizScore,
           lessonCompletion,
@@ -100,37 +98,35 @@
           'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
       },
       promoteLabel: {
-        message: 'Promote',
-        context: '',
+        message: 'Confirm',
+        context: 'Label for the confirmation button',
       },
       cancelLabel: {
         message: 'Cancel',
-        context: '',
+        context: 'Label for the cancel button',
       },
       singleLearnerApprovalConfirmatioMessage: {
         message: 'Approve promotion of {learner}?',
-        context:
-          'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
+        context: 'Message shown when an admin selects a single learner for promotion',
       },
       singleLearnerDenialConfirmatioMessage: {
         message: 'Cancel promotion of {learner}?',
-        context:
-          'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
+        context: 'Message shown when an admin selects a single learner for denial of promotion',
       },
       multiLearnerApprovalConfirmatioMessage: {
         message: 'Are you sure you want to promote the following {count} learners?',
         context:
-          'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
+          'Confirmation message shown when the admin selects multiple learners for promotion',
       },
       multiLearnerDenialConfirmatioMessage: {
         message: 'Are you sure you want to cancel promotion of the following {count} learners?',
         context:
-          'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
+          'Confirmation message shown when the admin selects multiple learners for denial of promotion',
       },
       singleLearnerDetails: {
         message: 'Quiz Score: {quizScore} | Lesson Completion: {lessonCompletion}',
         context:
-          'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
+          'Quiz and lesson details shown when a single learner is selected for approving/denial of promotion',
       },
     },
   };

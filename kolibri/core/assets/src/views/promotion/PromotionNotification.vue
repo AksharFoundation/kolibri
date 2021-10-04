@@ -13,14 +13,14 @@
     <PaginatedListContainer
       v-if="showPromotionNotification"
       :items="learnersListFilteredByDropdown"
-      filterPlaceholder="Search for a learner.."
+      :filterPlaceholder="$tr('searchboxPlaceholderText')"
     >
 
       <template #otherFilter>
         <KSelect
           v-model="classFilter"
-          label="Quiz Title"
-          :options="classOptions"
+          label="Class"
+          :options="listOfClasses"
           :inline="true"
           class="type-filter"
         />
@@ -29,7 +29,7 @@
       <template #default="{ items }">
         <CoreTable
           :selectable="true"
-          emptyMessage="No learner found"
+          :emptyMessage="$tr('searchNoResultText')"
         >
           <template #headers>
             <th class="table-checkbox-header">
@@ -52,22 +52,20 @@
             <th v-if="isAdminUser" class="table-header">
               {{ $tr('coachApproverLabel') }}
             </th>
-            <th class="table-header">
-              Action
-            </th>
           </template>
           <template #tbody>
             <tbody>
               <tr v-for="promotionObj in items" :key="promotionObj.id">
                 <td class="table-data">
                   <KCheckbox
-                    :showLabel="false"
-                    @change="handleCheckboxChange(promotionObj.id)"
+                    :disabled="promotionObj.promotion_status == 'RECOMMENDED' && !isAdminUser"
+                    @change="toggleLearnerSelection(promotionObj.id)"
                   />
                 </td>
                 <td class="table-data">
                   <KLabeledIcon icon="person">
                     <KRouterLink
+                      v-if="!isAdminUser"
                       :text="promotionObj.learner_name"
                       :to="classRoute('ReportsQuizLearnerPage', {
                         learnerId: promotionObj.learner_id,
@@ -77,14 +75,17 @@
                         interactionIndex: 0
                       })"
                     />
+                    <span v-else>{{ promotionObj.learner_name }}</span>
                   </KLabeledIcon>
                 </td>
                 <td class="table-data">
                   <KRouterLink
+                    v-if="!isAdminUser"
                     :text="promotionObj.quiz_name"
                     :to="classRoute('ReportsQuizLearnerListPage', { quizId: promotionObj.quiz_id, classId: promotionObj.classroom_id })"
                     icon="quiz"
                   />
+                  <span v-else>{{ promotionObj.quiz_name }}</span>
                 </td>
                 <td class="table-data">
                   {{ promotionObj.quiz_score }}
@@ -97,46 +98,22 @@
                   <template v-if="learnerNeedsReview(promotionObj.promotion_status)" class="center-text">
                     <KIcon 
                       :ref="toolkitReference(promotionObj.id)" 
-                      icon="infoPrimary"
+                      icon="warningIncomplete"
                       class="item svg-item"
-                      :style="{ fill: $themeTokens.incorrect }"
                     />
                     <KTooltip
                       :reference="toolkitReference(promotionObj.id)" 
                       :refs="$refs"
                       placement="bottom"
                     >
-                      <ul>
-                        <li>{{ promotionObj.learner_name }} promotion was denied by {{ promotionObj.admin_approver }}.</li>
-                        <li>Please re-evaluate the learner. </li>
-                      </ul>
+                      {{ $tr('promotionDeniedText', { learner: promotionObj.learner_name, admin: promotionObj.admin_approver }) }}
                     </KTooltip>
                   </template>
                 </td>
                 <td v-if="isAdminUser" class="table-data">
-                  {{ promotionObj.coach_approver }}
-                </td>
-                <td class="table-data">
-                  <KButton
-                    v-if="!isAdminUser"
-                    :text="$tr('RecommendActionLabel')"
-                    :primary="true"
-                    @click="handleActionButtonSelection(promotionObj.id, '')"
-                  />
-                  <KButtonGroup v-if="isAdminUser">
-                    <KButton
-                      :secondary="true"
-                      appearance="raised-button"
-                      text="Deny"
-                      @click="handleActionButtonSelection(promotionObj.id, 'deny')"
-                    />
-                    <KButton
-                      :primary="true"
-                      appearance="raised-button"
-                      text="Promote"
-                      @click="handleActionButtonSelection(promotionObj.id, 'promote')"
-                    />
-                  </KButtonGroup>
+                  <KLabeledIcon icon="person">
+                    {{ promotionObj.coach_approver }}
+                  </KLabeledIcon>
                 </td>
               </tr>    
             </tbody>
@@ -144,19 +121,26 @@
         </CoreTable>   
       </template>
     </PaginatedListContainer>
-
+    <SelectionButtonGroup
+      :isAdminUser="isAdminUser"
+      :count="Object.keys(selectedLearners).length"
+      :showPromotionNotification="showPromotionNotification"
+      @recommend="handleActionButtonSelection('recommend')"
+      @deny="handleActionButtonSelection('deny')"
+      @promote="handleActionButtonSelection('recommend')"
+    />
     <CoachPromotionModal
-      v-if="displayPromotionModel"
+      v-if="displayCoachPromotionModel"
       :multipleLearnerSelect="multipleLearnerSelect"
-      :selectedPromotionList="promotionRecommendationDict"
+      :selectedLearners="selectedLearners"
       @submit="handlePromotionUpdateByCoach"
-      @cancel="displayPromotionModel = false"
+      @cancel="displayCoachPromotionModel = false"
     />
     <AdminPromotionModal 
       v-if="displayAdminPromotionModel"
       :multipleLearnerSelect="multipleLearnerSelect"
-      :selectedPromotionList="promotionRecommendationDict"
-      :approveSelected="adminAction == 'Approve'"
+      :selectedLearners="selectedLearners"
+      :approveSelected="adminAction == 'promote'"
       @submit="handlePromotionUpdateByAdmin"
       @cancel="displayAdminPromotionModel = false"
     />
@@ -174,6 +158,12 @@
   import updatePromotionQueueObjects from 'kolibri.utils.updatePromotionQueueObjects';
   import CoachPromotionModal from './CoachPromotionModal';
   import AdminPromotionModal from './AdminPromotionModal';
+  import SelectionButtonGroup from './SelectionButtonGroup';
+
+  const AdminAction = {
+    PROMOTE: 'promote',
+    DENIED: 'deny',
+  };
 
   export default {
     name: 'PromotionNotification',
@@ -181,6 +171,7 @@
       CoreTable,
       CoachPromotionModal,
       AdminPromotionModal,
+      SelectionButtonGroup,
       PaginatedListContainer,
     },
     mixins: [commonCoreStrings],
@@ -196,13 +187,21 @@
     },
     data() {
       return {
-        promotionRecommendationDict: {},
-        displayPromotionModel: false,
+        // list of learners that are selected by the coach/admin
+        selectedLearners: {},
+        // show/hide confirmation modal for coach
+        displayCoachPromotionModel: false,
+        // indicates if multiple learners are selected from the list
         multipleLearnerSelect: false,
+        // the list of promotion entries from server
         promotionList: this.promotions,
-        acceptPromotion: false,
+        // if the admin has clicked accept button
+        acceptPromotionSelected: false,
+        // show/hide confirmation modal for admin
         displayAdminPromotionModel: false,
+        // action taken by the admin
         adminAction: '',
+        // the option selected from the dropdown filter
         classFilter: null,
       };
     },
@@ -216,7 +215,7 @@
       },
       showPromotionNotification() {
         let allowed_values = ['Coach', 'FacilityAdmin'];
-        return Object.keys(this.promotionList).length > 0 && allowed_values.includes(this.role);
+        return this.countOfLearners() > 0 && allowed_values.includes(this.role);
       },
       isAdminUser() {
         if (this.role == 'FacilityAdmin') {
@@ -224,117 +223,117 @@
         }
         return false;
       },
-      classOptions() {
+      listOfClasses() {
         let options = [{ label: 'All', value: 'All' }];
         let keys = ['All'];
 
         for (var index in this.promotionList) {
-          if (keys.indexOf(this.promotionList[index]['quiz_name']) == -1) {
-            let quizName = this.promotionList[index]['quiz_name'];
-            options.push({ label: quizName, value: quizName });
-            keys.push(quizName);
+          if (keys.indexOf(this.promotionList[index]['classroom_name']) == -1) {
+            let className = this.promotionList[index]['classroom_name'];
+            options.push({ label: className, value: className });
+            keys.push(className);
           }
         }
         return options;
       },
       learnersListFilteredByDropdown() {
-        console.log(this.classFilter.value);
         if (this.classFilter.value == 'All') {
           return this.promotionList;
         }
-        return this.promotionList.filter(item => item['quiz_name'] == this.classFilter.value);
+        return this.promotionList.filter(item => item['classroom_name'] == this.classFilter.value);
       },
     },
+
     beforeMount() {
-      this.classFilter = this.classOptions[0];
+      this.classFilter = this.listOfClasses[0];
     },
     methods: {
       classRoute(name, params = {}, query = {}) {
         return router.getRoute(name, params, query);
       },
-      handleActionButtonSelection(id, action) {
-        // adds the learner to the dictionary. Doesnt matter if its already exists as dictionary wont create a duplicate entry
-        this.promotionRecommendationDict[id] = this.getPromotionDetailsById(id);
-        this.multipleLearnerSelect = Object.keys(this.promotionRecommendationDict).length > 1;
-        if (action == 'promote') {
-          this.acceptPromotion = true;
+      handleActionButtonSelection(action) {
+        this.multipleLearnerSelect = this.countOfSelectedLearners() > 1;
+
+        if (action == AdminAction.PROMOTE) {
+          this.adminAction = AdminAction.PROMOTE;
+          this.acceptPromotionSelected = true;
           this.displayAdminPromotionModel = true;
-          this.adminAction = 'Approve';
-        } else if (action == 'deny') {
-          this.acceptPromotion = false;
+        } else if (action == AdminAction.DENIED) {
+          this.adminAction = AdminAction.DENIED;
+          this.acceptPromotionSelected = false;
           this.displayAdminPromotionModel = true;
-          this.adminAction = 'Deny';
         } else {
-          this.displayPromotionModel = true;
+          // if no admin action triggered, then show coach's modal
+          this.displayCoachPromotionModel = true;
         }
       },
       // handles the updating the promotion statuses on server
       // Removes the entry from the displayed page
       handlePromotionUpdateByCoach() {
-        this.displayPromotionModel = false;
-        const ids = Object.keys(this.promotionRecommendationDict);
+        this.displayCoachPromotionModel = false;
+        const ids = Object.keys(this.selectedLearners);
         for (var i in ids) {
-          for (var j = Object.keys(this.promotionList).length - 1; j >= 0; j--) {
+          for (var j = this.countOfLearners() - 1; j >= 0; j--) {
             if (this.promotionList[j].id == ids[i]) {
-              this.promotionList.splice(j, 1);
+              this.promotionList[i]['promotion_status'] = 'RECOMMENDED';
             }
           }
         }
-        for (var i in this.promotionRecommendationDict) {
-          this.promotionRecommendationDict[i]['promotion_status'] = 'RECOMMENDED';
-          this.promotionRecommendationDict[i]['coach_approver'] = this.fullName;
-          updatePromotionQueueObjects(this.promotionRecommendationDict[i]);
+        for (var i in this.selectedLearners) {
+          this.selectedLearners[i]['promotion_status'] = 'RECOMMENDED';
+          this.selectedLearners[i]['coach_approver'] = this.fullName;
+          updatePromotionQueueObjects(this.selectedLearners[i]);
         }
         this.showSnackbarNotification('learnerRecommendedForPromotion', {
-          count: Object.keys(this.promotionRecommendationDict).length,
+          count: this.countOfSelectedLearners(),
         });
-        this.promotionRecommendationDict = {};
-        if (Object.keys(this.promotionList).length == 0) {
+        this.clearSelectLearners();
+        if (this.countOfLearners() == 0) {
           this.promotionList = [];
         }
       },
       handlePromotionUpdateByAdmin() {
         this.displayAdminPromotionModel = false;
-        const ids = Object.keys(this.promotionRecommendationDict);
+        const ids = Object.keys(this.selectedLearners);
         for (var i in ids) {
-          for (var j = Object.keys(this.promotionList).length - 1; j >= 0; j--) {
+          for (var j = this.countOfLearners() - 1; j >= 0; j--) {
             if (this.promotionList[j].id == ids[i]) {
               this.promotionList.splice(j, 1);
             }
           }
         }
-        for (var i in this.promotionRecommendationDict) {
-          if (this.acceptPromotion) {
-            this.promotionRecommendationDict[i]['promotion_status'] = 'APPROVED';
+        for (var i in this.selectedLearners) {
+          if (this.acceptPromotionSelected) {
+            this.selectedLearners[i]['promotion_status'] = 'APPROVED';
           } else {
-            this.promotionRecommendationDict[i]['promotion_status'] = 'CANCELLED';
+            this.selectedLearners[i]['promotion_status'] = 'CANCELLED';
           }
-          this.promotionRecommendationDict[i]['admin_approver'] = this.fullName;
-          updatePromotionQueueObjects(this.promotionRecommendationDict[i]);
+          this.selectedLearners[i]['admin_approver'] = this.fullName;
+          updatePromotionQueueObjects(this.selectedLearners[i]);
         }
 
-        if (this.acceptPromotion) {
+        if (this.acceptPromotionSelected) {
           this.showSnackbarNotification('learnerApprovedForPromotion', {
-            count: Object.keys(this.promotionRecommendationDict).length,
+            count: this.countOfSelectedLearners(),
           });
         } else {
           this.showSnackbarNotification('learnerDeniedForPromotion', {
-            count: Object.keys(this.promotionRecommendationDict).length,
+            count: this.countOfSelectedLearners(),
           });
         }
 
-        this.promotionRecommendationDict = {};
-        this.acceptPromotion = false;
-        if (Object.keys(this.promotionList).length == 0) {
+        this.clearSelectLearners();
+        this.acceptPromotionSelected = false;
+        if (this.countOfLearners() == 0) {
           this.promotionList = [];
         }
       },
-      handleCheckboxChange(id) {
+      toggleLearnerSelection(id) {
         // adds or removes the learner from the dictionary on toggling the selection box
-        if (id in this.promotionRecommendationDict) {
-          delete this.promotionRecommendationDict[id];
+        if (id in this.selectedLearners) {
+          this.$delete(this.selectedLearners, id);
         } else {
-          this.promotionRecommendationDict[id] = this.getPromotionDetailsById(id);
+          this.$set(this.selectedLearners, id, this.getPromotionDetailsById(id));
         }
       },
       getPromotionDetailsById(id) {
@@ -362,6 +361,15 @@
       toolkitReference(id) {
         return 'icon_' + id;
       },
+      countOfLearners() {
+        return Object.keys(this.promotionList).length;
+      },
+      countOfSelectedLearners() {
+        return Object.keys(this.selectedLearners).length;
+      },
+      clearSelectLearners() {
+        this.selectedLearners = {};
+      },
     },
     $trs: {
       studentPromotionHeader: {
@@ -370,12 +378,12 @@
           'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
       },
       studentPromotionSubHeader: {
-        message: 'View learners to be promoted and reviewed',
+        message: 'View students to be promoted and reviewed',
         context:
           'Subtitle for promotion section -> Promotion section showing the list of students eligible for promotion',
       },
       studentPromotionEmptySubHeader: {
-        message: 'There are no learners to be promoted and reviewed',
+        message: 'There are no students to be promoted and reviewed',
         context:
           'Subtitle for promotion section -> Promotion section showing the list of students eligible for promotion',
       },
@@ -384,32 +392,41 @@
         context: 'The current status of the promotion recommendation',
       },
       quizTitleLabel: {
-        message: 'Quiz Title',
+        message: 'Exam Title',
         context: 'The marks obtained by the learner in the quiz',
       },
       QuizScoreLabel: {
-        message: 'Quiz Score',
+        message: 'Exam Score',
         context: 'The marks obtained by the learner in the quiz',
       },
       LessonCompletionLabel: {
         message: 'Course Completion',
         context: "The learner's progress in the specific subject",
       },
-      RecommendActionLabel: {
-        message: 'Recommend',
-        context: 'On clicking the button, the selected students will be recommended for promotion',
-      },
       statusReviewText: {
         message: 'Needs Review',
-        context: 'On clicking the button, the selected students will be recommended for promotion',
+        context: 'Status indicating that a learner needs to be reviewed for promotion',
       },
       statusRecommendedText: {
         message: 'Recommended',
-        context: 'On clicking the button, the selected students will be recommended for promotion',
+        context: 'Status indicating that a learner is already recommended for promotion',
       },
       coachApproverLabel: {
-        message: 'Coach Approver',
-        context: 'On clicking the button, the selected students will be recommended for promotion',
+        message: 'Teacher Approver',
+        context: 'Indicates the coach who has recommended the learner for promotion',
+      },
+      searchboxPlaceholderText: {
+        message: 'Search for students..',
+        context: 'Search box placeholder',
+      },
+      searchNoResultText: {
+        message: 'No students found for the provided search text.',
+        context: 'Indicates no learner found matching the search text',
+      },
+      promotionDeniedText: {
+        message: '{learner} promotion was denied by {admin}. Please re-evaluate the student again',
+        context:
+          "If a learner's promotion was denied by an admin. Indicates the admin who denied it and the steps to be taken next.",
       },
     },
   };

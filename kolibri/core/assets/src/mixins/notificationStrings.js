@@ -106,15 +106,17 @@ export default createTranslator('NotificationStrings', {
   },
   learnerRecommendedForPromotion: {
     message:
-      '{count, number} {count, plural, one {learner recommended} other {learners recommended}}',
+      '{count, number} {count, plural, one {student recommended for promotion} other {students recommended for promotion}}',
     context: 'Recommending a specified number of learner for promotion',
   },
   learnerApprovedForPromotion: {
-    message: '{count, number} {count, plural, one {learner approved} other {learners approved}}',
+    message:
+      '{count, number} {count, plural, one {student approved for promotion} other {students approved for promotion}}',
     context: 'Approving a specified number of learner for promotion',
   },
   learnerDeniedForPromotion: {
-    message: '{count, number} {count, plural, one {learner denied} other {learners denied}}',
+    message:
+      '{count, number} {count, plural, one {student denied promotion} other {students denied promotion}}',
     context: 'Denying a specified number of learner for promotion',
   },
   // TODO move more messages into this namespace:

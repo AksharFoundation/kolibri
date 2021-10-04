@@ -167,7 +167,6 @@
             promotions = promotions.concat(this.classes[i]['promotions']);
           }
         }
-        console.log(promotions);
         return promotions;
       },
     },

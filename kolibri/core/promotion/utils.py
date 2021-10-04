@@ -9,10 +9,9 @@ from django.db.models import Q
 
 ROLE_COACH = "coach"
 ROLE_FACILTY_ADMIN = "facility"
-STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED", "RECOMMENDED"]
+STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED"]
 STATUS_TO_BE_INCLUDED_FOR_ADMIN =  "RECOMMENDED"
 PASS_SCORE = 10.0
-CLASS_LIST = ["Class 3 Math", "Class 4 Math"]
 
 def get_promotion_list(role, **kwargs):
     if role == ROLE_COACH:
@@ -106,8 +105,13 @@ def promotion_entry_already_exists(quiz_id, learner_id, classroom_id, facility_i
         facility_id = facility_id)         
 
 def get_next_classroom_id(classroom):
-    index = CLASS_LIST.index(classroom)
-    next_classroom_name =  CLASS_LIST[index + 1]    
+    next_classroom_name = __get_next_classroom_name(classroom)   
     classroom_query = Classroom.objects.filter(name =  next_classroom_name)    
     classroom_data = serialize_classroom_data(classroom_query)
     return classroom_data[0]["id"]
+
+def __get_next_classroom_name(classroom):
+    arr = classroom.split()
+    subject_name = arr[0]
+    next_class_level = int(arr[1]) + 1
+    return subject_name + " " + str(next_class_level)  

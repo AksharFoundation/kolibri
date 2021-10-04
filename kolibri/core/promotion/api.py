@@ -13,6 +13,7 @@ from .utils import get_next_classroom_id
 from .serializer import PromotionQueueSerializer
 from kolibri.core.auth.models import Collection, FacilityUser, Membership
 from kolibri.core.auth.constants import role_kinds
+from kolibri.core.notifications.api import create_promotion_notification
 
 
 class PromotionQueuePermissions(permissions.BasePermission):
@@ -77,6 +78,8 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
             self._perform_update(serialized.validated_data, id)
             if serialized.validated_data["promotion_status"] == "APPROVED":
                 self._move_student_to_next_level(serialized.validated_data["classroom_id"], serialized.validated_data["classroom_name"], serialized.validated_data["learner_id"])
+            if serialized.validated_data["promotion_status"] == "APPROVED" or serialized.validated_data["promotion_status"] == "CANCELLED":
+                create_promotion_notification(serialized.validated_data["promotion_status"], serialized.validated_data["learner_id"], serialized.validated_data["classroom_id"], serialized.validated_data["quiz_id"] )   
             return Response(serialized.data, status=status.HTTP_200_OK) 
         else:
             for val in data:

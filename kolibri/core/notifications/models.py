@@ -91,6 +91,7 @@ class NotificationObjectType(myEnum):
     Quiz = "Quiz"
     Help = "Help"
     Lesson = "Lesson"
+    Promotion = "Promotion"
 
 
 class NotificationEventType(myEnum):
@@ -98,6 +99,8 @@ class NotificationEventType(myEnum):
     Completed = "Completed"
     Help = "HelpNeeded"
     Answered = "Answered"
+    Promoted = "Promoted"
+    Denied = "Denied"
 
 
 class HelpReason(myEnum):

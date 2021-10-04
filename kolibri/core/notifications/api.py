@@ -1,3 +1,4 @@
+from kolibri.core import notifications
 from django.db import transaction
 from django.db.models import Case
 from django.db.models import Count
@@ -508,3 +509,16 @@ def batch_process_summarylogs(summarylog_ids):
     for summarylog in ContentSummaryLog.objects.filter(id__in=summarylog_ids):
         create_summarylog(summarylog)
         parse_summarylog(summarylog)
+
+
+def create_promotion_notification(promotion_status, learner_name, classroom_id, quiz_id):
+    eventType = NotificationEventType.Promoted if promotion_status == "APPROVED" else NotificationEventType.Denied 
+    notification = create_notification(
+        notification_object= NotificationObjectType.Promotion,
+        notification_event = eventType,
+        user_id= learner_name,
+        classroom_id= classroom_id,
+        quiz_id = quiz_id)
+    notifications = [notification]
+    if notifications:
+        save_notifications(notifications)    

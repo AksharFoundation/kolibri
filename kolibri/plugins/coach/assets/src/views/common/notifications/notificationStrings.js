@@ -2,8 +2,8 @@ import { createTranslator } from 'kolibri.utils.i18n';
 import { CollectionTypes } from '../../../constants/lessonsConstants';
 import { NotificationEvents, NotificationObjects } from '../../../constants/notificationsConstants';
 
-const { LESSON, RESOURCE, QUIZ } = NotificationObjects;
-const { COMPLETED, STARTED, HELP_NEEDED } = NotificationEvents;
+const { LESSON, RESOURCE, QUIZ, PROMOTION } = NotificationObjects;
+const { COMPLETED, STARTED, HELP_NEEDED, PROMOTED, DENIED } = NotificationEvents;
 
 /*
   nStrings.$tr('individualFinished', {learnerName, itemName})
@@ -66,6 +66,16 @@ const nStrings = createTranslator('NotificationStrings', {
     context: 'Indicates that a learner needs help with a specific lesson.',
   },
   multipleNeedHelp: `{learnerName} and {numOthers, number} {numOthers, plural, one {other} other {others}} need help with '{itemName}'`,
+
+  //promotions
+  individualPromotionPromoted: {
+    message: `{learnerName} promotion was approved.`,
+    context: 'Indicates that a learner was promoted to the next level',
+  },
+  individualPromotionDenied: {
+    message: `{learnerName} promotion was denied.`,
+    context: "Indicates that a learner's promotion to the next level was denied",
+  },
 });
 
 const nStringsMixin = {
@@ -90,7 +100,7 @@ function cardTextForNotification(notification) {
     stringDetails.itemName = resource.name;
   }
 
-  if (object === LESSON || object === QUIZ) {
+  if (object === LESSON || object === QUIZ || object === PROMOTION) {
     stringDetails.itemName = notification.assignment.name;
   }
 
@@ -116,6 +126,10 @@ function cardTextForNotification(notification) {
         stringDetails.numOthers = learnerSummary.total - 1;
       }
     }
+  }
+
+  if (event === DENIED || event === PROMOTED) {
+    stringType = `individualPromotion${event}`;
   }
 
   if (event === HELP_NEEDED) {

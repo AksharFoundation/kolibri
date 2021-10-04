@@ -98,6 +98,7 @@
           ALL: 'all',
           LESSON: 'lesson',
           QUIZ: 'quiz',
+          PROMOTION: 'promotion',
         },
       };
     },

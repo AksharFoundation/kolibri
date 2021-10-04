@@ -6,7 +6,7 @@ import { ContentNodeKinds } from 'kolibri.coreVue.vuex.constants';
 import { NotificationObjects, NotificationEvents } from '../../constants/notificationsConstants';
 import { CollectionTypes } from '../../constants/lessonsConstants';
 
-const { LESSON, RESOURCE, QUIZ } = NotificationObjects;
+const { LESSON, RESOURCE, QUIZ, PROMOTION } = NotificationObjects;
 
 export function allNotifications(state, getters, rootState, rootGetters) {
   const classSummary = rootGetters['classSummary/notificationModuleData'];
@@ -38,7 +38,7 @@ export function allNotifications(state, getters, rootState, rootGetters) {
     // Finds the first group the user_id is in and just uses that label.
     // Does not make additional notifications if the user is in more than
     // one group that has been assigned lesson or quiz.
-    if (object === QUIZ) {
+    if (object === QUIZ || object === PROMOTION) {
       const examMatch = classSummary.exams[notification.quiz_id];
       if (!examMatch) {
         return null;
@@ -75,7 +75,7 @@ export function allNotifications(state, getters, rootState, rootGetters) {
     }
 
     let assignment = {};
-    if (object === QUIZ) {
+    if (object === QUIZ || object === PROMOTION) {
       assignment = {
         name: classSummary.exams[notification.quiz_id].title,
         type: ContentNodeKinds.EXAM,
@@ -131,7 +131,7 @@ export function summarizedNotifications(state, getters, rootState, rootGetters) 
       if (n.object === LESSON) {
         return `${n.object}_${n.lesson_id}`;
       }
-      if (n.object === QUIZ) {
+      if (n.object === QUIZ || n.object === PROMOTION) {
         return `${n.object}_${n.quiz_id}`;
       }
     }
