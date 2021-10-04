@@ -527,7 +527,7 @@
     },
     $trs: {
       createNewExamLabel: {
-        message: 'Create new Exam',
+        message: 'Create new exam',
         context: "Title of the screen launched from the 'New quiz' button on the 'Plan' tab.",
       },
       chooseExercises: {

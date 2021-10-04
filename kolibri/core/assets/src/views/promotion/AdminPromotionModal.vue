@@ -93,7 +93,7 @@
     },
     $trs: {
       modalTitle: {
-        message: 'Learner Promotion',
+        message: 'Student Promotions',
         context:
           'Title for promotion section -> Promotion section showing the list of students eligible for promotion',
       },
@@ -114,12 +114,12 @@
         context: 'Message shown when an admin selects a single learner for denial of promotion',
       },
       multiLearnerApprovalConfirmatioMessage: {
-        message: 'Are you sure you want to promote the following {count} learners?',
+        message: 'Are you sure you want to promote the following {count} students?',
         context:
           'Confirmation message shown when the admin selects multiple learners for promotion',
       },
       multiLearnerDenialConfirmatioMessage: {
-        message: 'Are you sure you want to cancel promotion of the following {count} learners?',
+        message: 'Are you sure you want to cancel promotion of the following {count} students?',
         context:
           'Confirmation message shown when the admin selects multiple learners for denial of promotion',
       },

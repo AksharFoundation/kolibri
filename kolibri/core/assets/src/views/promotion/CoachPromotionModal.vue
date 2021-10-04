@@ -90,7 +90,7 @@
         context: 'Message shown when an admin selects a single learner for promotion',
       },
       multiLearnerConfirmatioMessage: {
-        message: 'Are you sure you want to recommend the following {count} learners for promotion?',
+        message: 'Are you sure you want to recommend the following {count} students for promotion?',
         context:
           'Confirmation message shown when the admin selects multiple learners for promotion',
       },

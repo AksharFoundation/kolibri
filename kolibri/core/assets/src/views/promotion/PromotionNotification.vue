@@ -211,6 +211,7 @@
         fullName: state => state.core.session.full_name,
       }),
       learnerList() {
+        console.log(this.promotionList);
         return this.promotionList;
       },
       showPromotionNotification() {
@@ -270,15 +271,9 @@
       // handles the updating the promotion statuses on server
       // Removes the entry from the displayed page
       handlePromotionUpdateByCoach() {
+        console.log(this.promotionList);
         this.displayCoachPromotionModel = false;
         const ids = Object.keys(this.selectedLearners);
-        for (var i in ids) {
-          for (var j = this.countOfLearners() - 1; j >= 0; j--) {
-            if (this.promotionList[j].id == ids[i]) {
-              this.promotionList[i]['promotion_status'] = 'RECOMMENDED';
-            }
-          }
-        }
         for (var i in this.selectedLearners) {
           this.selectedLearners[i]['promotion_status'] = 'RECOMMENDED';
           this.selectedLearners[i]['coach_approver'] = this.fullName;
@@ -330,6 +325,7 @@
       },
       toggleLearnerSelection(id) {
         // adds or removes the learner from the dictionary on toggling the selection box
+
         if (id in this.selectedLearners) {
           this.$delete(this.selectedLearners, id);
         } else {

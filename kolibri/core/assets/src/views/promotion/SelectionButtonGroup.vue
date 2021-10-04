@@ -54,7 +54,6 @@
         return this.count === 0;
       },
       selectedMessage() {
-        console.log(this.count);
         return this.$tr('learnersSelectedMessage', { count: this.count });
       },
     },

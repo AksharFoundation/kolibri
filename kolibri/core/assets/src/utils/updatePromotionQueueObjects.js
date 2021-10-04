@@ -5,7 +5,7 @@ export default function updatePromotionQueueObjects(promotionUpdate) {
   return new Promise((resolve, reject) => {
     PromotionQueueResource.saveModel({ data: promotionUpdate, exists: true }).then(
       promotionUpdate => {
-        if (promotionUpdate.promotion_status == 'APPROVED' || true) {
+        if (promotionUpdate.promotion_status == 'APPROVED') {
           store.commit('classManagement/UPDATE_CLASS_LEARNER_COUNT', {
             classroom: promotionUpdate.classroom_id,
           });
