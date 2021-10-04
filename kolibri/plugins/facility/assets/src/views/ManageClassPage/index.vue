@@ -163,7 +163,10 @@
       promotionsList() {
         let promotions = [];
         for (var i in this.classes) {
-          if (Object.keys(this.classes[i]['promotions']).length > 0) {
+          if (
+            this.classes[i]['promotions'] != undefined &&
+            Object.keys(this.classes[i]['promotions']).length > 0
+          ) {
             promotions = promotions.concat(this.classes[i]['promotions']);
           }
         }

@@ -127,7 +127,7 @@
       :showPromotionNotification="showPromotionNotification"
       @recommend="handleActionButtonSelection('recommend')"
       @deny="handleActionButtonSelection('deny')"
-      @promote="handleActionButtonSelection('recommend')"
+      @promote="handleActionButtonSelection('promote')"
     />
     <CoachPromotionModal
       v-if="displayCoachPromotionModel"
