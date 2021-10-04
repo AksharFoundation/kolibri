@@ -84,7 +84,7 @@
     },
     $trs: {
       noAttemptsInExam: {
-        message: 'This quiz has not been started yet',
+        message: 'This exam has not been started yet',
         context:
           'This message will display if the learner has not made any attempt to answer a quiz question.',
       },

@@ -339,7 +339,7 @@
     },
     $trs: {
       reportVisibleToLearnersLabel: {
-        message: 'Report visible to learners',
+        message: 'Report visible to students',
         context:
           'The label for a switch that will toggle whether or not learners can view their quiz report.',
       },

@@ -1,7 +1,7 @@
 <template>
 
   <img v-if="src" :src="src">
-  <img v-else src="./kolibri-logo.svg">
+  <img v-else src="./akshar-logo.png">
 
 </template>
 

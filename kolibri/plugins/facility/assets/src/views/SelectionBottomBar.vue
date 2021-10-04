@@ -49,9 +49,9 @@
     },
     $trs: {
       coachesSelectedMessage:
-        '{count, number} {count, plural, one {coach} other {coaches}} selected',
+        '{count, number} {count, plural, one {teacher} other {teachers}} selected',
       learnersSelectedMessage:
-        '{count, number} {count, plural, one {learner} other {learners}} selected',
+        '{count, number} {count, plural, one {student} other {students}} selected',
     },
   };
 

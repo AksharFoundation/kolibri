@@ -47,15 +47,6 @@
         <div v-if="completed">
           <ElapsedTime :date="completionTimestamp" />
         </div>
-        <div v-if="completed && retakeEnabled" class="retake-button">
-          <KButton
-            :text="$tr('retakeExamLabel')"
-            appearance="raised-button"
-            style="margin: 0 20px 0 0;"
-            primary="true"
-            @click="submitModalOpen = true"
-          />
-        </div>
       </KFixedGridItem>
     </KFixedGrid>
     <KModal
@@ -68,6 +59,15 @@
     >
       <p>{{ $tr('scoreWarning') }}</p>
     </KModal>
+    <BottomAppBar v-if="completed && retakeEnabled">
+      <KButton
+        :text="$tr('retakeExamLabel')"
+        appearance="raised-button"
+        style="margin: 0 20px 0 0;"
+        :primary="true"
+        @click="submitModalOpen = true"
+      />
+    </BottomAppBar>
   </div>
 
 </template>
@@ -77,8 +77,9 @@
 
   import ProgressIcon from 'kolibri.coreVue.components.ProgressIcon';
   import ElapsedTime from 'kolibri.coreVue.components.ElapsedTime';
+  import BottomAppBar from 'kolibri.coreVue.components.BottomAppBar';
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
-  import { ExamLogResource, LearnerClassroomResource } from 'kolibri.resources';
+  import { ExamLogResource } from 'kolibri.resources';
   import { mapGetters } from 'vuex';
   import store from 'kolibri.coreVue.vuex.store';
 
@@ -87,6 +88,7 @@
     components: {
       ProgressIcon,
       ElapsedTime,
+      BottomAppBar,
     },
     mixins: [commonCoreStrings],
     props: {
@@ -213,7 +215,7 @@
           "When a coach creates a quiz, by default it is marked as 'Not started'. This means that learners will not see it in the Learn > Classes view.\n\nThe coach needs to use the 'START QUIZ' button to enable learners to see the quiz and start answering the questions.",
       },
       retakeExamLabel: {
-        message: 'Retake',
+        message: 'Retake Exam',
         context: 'When the total score is less than 90%, the learner can retake the exam again',
       },
       areYouSure: {

@@ -53,7 +53,7 @@
     },
     $trs: {
       coachResourceLabel: {
-        message: 'Coach resource',
+        message: 'Teacher resource',
         context:
           'Coach resource materials can be lesson plans, professional development readings, training materials, etc. only viewable by coaches and not learners.',
       },

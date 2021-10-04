@@ -92,7 +92,7 @@
             <div class="side-nav-scrollable-area-footer-info">
               <p>{{ footerMsg }}</p>
               <!-- Not translated -->
-              <p>© {{ copyrightYear }} Learning Equality</p>
+              <p>© {{ copyrightYear }} Akshar Foundation</p>
               <p>
                 <KButton
                   ref="privacyLink"
@@ -272,7 +272,7 @@
           "This message is providing additional context to the screen-reader users, but is not visible in the Kolibri UI.\n\nIn this case the screen-reader will announce the message when user navigates to the 'X' button with the keyboard, to indicate that it allows them to close the sidebar navigation menu. (Note that the sidebar needs to have been previously opened)",
       },
       poweredBy: {
-        message: 'Kolibri {version}',
+        message: 'Akshar {version}',
         context:
           'Indicates the current version of Kolibri.\n\nFor languages with non-latin scripts, Kolibri should be transcribed phonetically into the target language, similar to a person\'s name. It should not be translated as "hummingbird".',
       },

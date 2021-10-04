@@ -137,11 +137,11 @@
         context: "Description on 'Import users' page.",
       },
       importL3: {
-        message: 'set which classes each learner is enrolled in',
+        message: 'set which classes each student is enrolled in',
         context: "Description on 'Import users' page.",
       },
       importL4: {
-        message: 'set which classes each coach is assigned to',
+        message: 'set which classes each teacher is assigned to',
         context: "Description on 'Import users' page.",
       },
       importL5: {

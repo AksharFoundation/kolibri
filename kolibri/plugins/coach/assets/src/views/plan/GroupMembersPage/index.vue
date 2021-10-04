@@ -143,11 +143,11 @@
     },
     $trs: {
       enrollButton: {
-        message: 'Enroll learners',
+        message: 'Enroll students',
         context:
           'Button which allows user to add learners to a group once the group has been created.',
       },
-      noLearnersInGroup: 'No learners in this group',
+      noLearnersInGroup: 'No students in this group',
       groupDoesNotExist: {
         message: 'This group does not exist',
         context: 'This message displays if a group no longer exists.',

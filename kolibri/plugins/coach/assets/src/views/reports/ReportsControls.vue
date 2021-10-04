@@ -84,7 +84,7 @@
       },
     },
     $trs: {
-      viewLearners: 'View learner devices',
+      viewLearners: 'View student devices',
     },
   };
 

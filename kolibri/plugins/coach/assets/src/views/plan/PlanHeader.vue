@@ -51,7 +51,7 @@
         context: "Title of the 'Plan your class' section.",
       },
       planYourClassDescription: {
-        message: 'Create and manage your lessons, quizzes, and groups',
+        message: 'Create and manage your lessons, exams, and groups',
         context: "Description of the 'Plan your class' section.",
       },
       home: {

@@ -509,7 +509,7 @@
     },
     $trs: {
       kolibriTitleMessage: {
-        message: '{ title } - Kolibri',
+        message: '{ title } - Akshar',
         context: 'DO NOT TRANSLATE.',
       },
       errorPageTitle: {

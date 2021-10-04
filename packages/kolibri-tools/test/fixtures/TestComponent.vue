@@ -117,9 +117,9 @@
       classNameLabel: 'Class name',
       noAssignedClassesHeader: "You aren't assigned to any classes",
       noAssignedClassesDetails:
-        'Please consult your Kolibri administrator to be assigned to a class',
-      noClassesDetailsForAdmin: 'Create a class and enroll learners',
-      noClassesDetailsForFacilityCoach: 'Please consult your Kolibri administrator',
+        'Please consult your Akshar administrator to be assigned to a class',
+      noClassesDetailsForAdmin: 'Create a class and enroll students',
+      noClassesDetailsForFacilityCoach: 'Please consult your Akshar administrator',
       noClassesInFacility: 'There are no classes yet',
     },
   };

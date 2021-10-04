@@ -131,7 +131,7 @@
     },
     $trs: {
       visibleToLearnersLabel: {
-        message: 'Visible to learners',
+        message: 'Visible to students',
         context:
           'Label for the switch that toggles whether a lesson is visible to leareners or not.',
       },

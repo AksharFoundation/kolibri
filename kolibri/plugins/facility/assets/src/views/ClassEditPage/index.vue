@@ -177,24 +177,24 @@
     },
     $trs: {
       enrollLearnerButtonLabel: {
-        message: 'Enroll learners',
+        message: 'Enroll students',
         context: 'Button on class edit page used to add learners to a class.',
       },
       assignCoachesButtonLabel: {
-        message: 'Assign coaches',
+        message: 'Assign teachers',
         context: 'Button on class edit page which user uses to add a coach to a class.',
       },
       coachEnrollmentPageTitle: {
-        message: 'Manage class coaches and learners',
+        message: 'Manage class teachers and students',
         context: 'Description of class edit page.',
       },
       noCoachesInClassMessge: {
-        message: "You don't have any assigned coaches",
+        message: "You don't have any assigned teachers",
         context:
           'This text displays in the edit class page if there are no coaches assigned to a class.',
       },
       noLearnersInClassMessage: {
-        message: "You don't have any enrolled learners",
+        message: "You don't have any enrolled students",
         context:
           'This text displays in the edit class page if there are no learners enrolled in a class.',
       },

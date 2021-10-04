@@ -51,8 +51,8 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             # sign-in page config
             theme_hook.SIGN_IN: {
                 theme_hook.BACKGROUND: static("background.jpg"),
-                theme_hook.BACKGROUND_IMG_CREDIT: "Thomas Van Den Driessche",
-                theme_hook.SCRIM_OPACITY: 0.7,
+                theme_hook.BACKGROUND_IMG_CREDIT: "Hrishikesh Medhi",
+                theme_hook.SCRIM_OPACITY: 0.5,
                 theme_hook.TITLE: None,  # use default: "Kolibri"
                 theme_hook.TOP_LOGO: {
                     theme_hook.IMG_SRC: None,  # use default Kolibri bird
