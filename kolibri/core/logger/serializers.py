@@ -60,6 +60,7 @@ class ContentSessionLogSerializer(KolibriModelSerializer):
 class ExamLogSerializer(KolibriModelSerializer):
     progress = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
+    clear_attempt_log = serializers.BooleanField(write_only=True, required=False)
 
     def get_progress(self, obj):
         return obj.attemptlogs.values_list("item").distinct().count()
@@ -83,6 +84,7 @@ class ExamLogSerializer(KolibriModelSerializer):
             "progress",
             "score",
             "completion_timestamp",
+            "clear_attempt_log",
         )
         read_only_fields = ("completion_timestamp",)
 

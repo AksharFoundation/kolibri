@@ -353,6 +353,7 @@
     padding: 32px;
     margin: 16px auto;
     border-radius: $radius;
+    opacity: 0.9;
   }
 
   .login-btn {

@@ -14,6 +14,8 @@ from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from kolibri.core.promotion.models import PromotionQueue
+
 from .models import AttemptLog
 from .models import ContentSessionLog
 from .models import ContentSummaryLog
@@ -275,5 +277,8 @@ class ExamLogViewSet(viewsets.ModelViewSet):
         completed = request.data["closed"]
         # if an exam is completed, add a promotion request if the learner is eligible
         if completed:
-            create_new_promotion_entry(kwargs.get('pk'), request.data)
+            create_new_promotion_entry(kwargs.get('pk'), request.data)  
+        # if learner is retaking exam, clear exam attempt log any pending promotion request by the learner    
+        if "clear_attempt_log" in request.data and request.data["clear_attempt_log"]:
+            ExamAttemptLog.objects.filter(examlog = kwargs.get('pk')).delete()
         return Response(serializer.data)

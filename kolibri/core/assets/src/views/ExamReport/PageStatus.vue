@@ -79,7 +79,7 @@
   import ElapsedTime from 'kolibri.coreVue.components.ElapsedTime';
   import BottomAppBar from 'kolibri.coreVue.components.BottomAppBar';
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
-  import { ExamLogResource } from 'kolibri.resources';
+  import { ExamLogResource, ExamAttemptLogResource } from 'kolibri.resources';
   import { mapGetters } from 'vuex';
   import store from 'kolibri.coreVue.vuex.store';
 
@@ -169,10 +169,13 @@
             user: this.examLog.user,
             completion_timestamp: null,
             closed: false,
+            clear_attempt_log: true,
           },
         })
           .then(() => {
             // Redirect to exam page
+            ExamLogResource.clearCache();
+            ExamAttemptLogResource.clearCache();
             this.$router.push(
               this.$router.getRoute('EXAM_VIEWER', {
                 params: {
