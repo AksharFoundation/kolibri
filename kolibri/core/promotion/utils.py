@@ -11,7 +11,7 @@ ROLE_COACH = "coach"
 ROLE_FACILTY_ADMIN = "facility"
 STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED"]
 STATUS_TO_BE_INCLUDED_FOR_ADMIN =  "RECOMMENDED"
-PASS_SCORE = 10.0
+PASS_SCORE = 90.0
 
 def get_promotion_list(role, **kwargs):
     if role == ROLE_COACH:
