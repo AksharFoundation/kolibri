@@ -77,7 +77,8 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
             serialized.is_valid(raise_exception=True)
             self._perform_update(serialized.validated_data, id)
             if serialized.validated_data["promotion_status"] == "APPROVED":
-                self._move_student_to_next_level(serialized.validated_data["classroom_id"], serialized.validated_data["classroom_name"], serialized.validated_data["learner_id"])
+                next_classroom_id = self._move_student_to_next_level(serialized.validated_data["classroom_id"], serialized.validated_data["classroom_name"], serialized.validated_data["learner_id"])
+                return Response({"promoted_to_classroom_id": next_classroom_id, "promoted_from_classroom_id" : serialized.validated_data["classroom_id"]}, status=status.HTTP_200_OK)  
             if serialized.validated_data["promotion_status"] == "APPROVED" or serialized.validated_data["promotion_status"] == "CANCELLED":
                 create_promotion_notification(serialized.validated_data["promotion_status"], serialized.validated_data["learner_id"], serialized.validated_data["classroom_id"], serialized.validated_data["quiz_id"] )   
             return Response(serialized.data, status=status.HTTP_200_OK) 
@@ -95,7 +96,8 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
         Membership.objects.filter(collection= classroom_id, user = learner_id).delete()
         facilyUser = FacilityUser.objects.filter(id = learner_id)
         collection = Collection.objects.filter(id = next_classroom_id)
-        Membership.objects.get_or_create(collection =  collection[0], user = facilyUser[0])         
+        Membership.objects.get_or_create(collection =  collection[0], user = facilyUser[0])
+        return next_classroom_id         
 
 
     def serialise_facility_user(queryset):

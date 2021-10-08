@@ -26,8 +26,18 @@ export default {
     ADD_CLASS(state, classroom) {
       state.classes.push(classroom);
     },
-    UPDATE_CLASS_LEARNER_COUNT(state, id) {
-      state.classes.filter(classModel => classModel.id === id).learner_count++;
+    UPDATE_CLASS_LEARNER_COUNT(state, { to_classroom, from_classroom }) {
+      state.classes
+        .filter(classModel => classModel.id === from_classroom)
+        .forEach(classModel => {
+          classModel.learner_count = classModel.learner_count - 1;
+        });
+
+      state.classes
+        .filter(classModel => classModel.id === to_classroom)
+        .forEach(classModel => {
+          classModel.learner_count = classModel.learner_count + 1;
+        });
     },
     DELETE_CLASS(state, id) {
       state.classes = state.classes.filter(classModel => classModel.id !== id);
