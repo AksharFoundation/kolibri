@@ -84,7 +84,7 @@
       },
       singleLearnerDetails() {
         let quizScore = Object.values(this.selectedLearners)[0].quiz_score;
-        let lessonCompletion = Object.values(this.selectedLearners)[0].quiz_score;
+        let lessonCompletion = Object.values(this.selectedLearners)[0].lesson_completion;
         return this.$tr('singleLearnerDetails', {
           quizScore,
           lessonCompletion,

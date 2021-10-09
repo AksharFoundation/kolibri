@@ -13,6 +13,8 @@ from kolibri.utils.time_utils import local_now
 
 
 class PromotionStatus(Enum):
+    #Required lessons are not completed for the class
+    LESSONS_PENDING = "lessons_pending"
     #A new created promotion tracking entry
     REVIEW = "Review"
     #A promotion thats approved by a coach 
@@ -32,7 +34,7 @@ class PromotionQueue(models.Model):
     morango_model_name = "PromotionQueue"
     permissions = (
         RoleBasedPermissions(
-            target_field="collection",
+            target_field="collection",  
             can_be_created_by=(role_kinds.ADMIN, role_kinds.COACH),
             can_be_read_by=(role_kinds.ADMIN, role_kinds.COACH),
             can_be_updated_by=(role_kinds.ADMIN, role_kinds.COACH),
@@ -60,6 +62,8 @@ class PromotionQueue(models.Model):
     quiz_name = models.CharField(max_length=200)
     #the score in the quiz
     quiz_score = models.IntegerField(null=True)
+    #Percentage of lessons completed by the learner
+    lesson_completion = models.FloatField(null=True)
     #the status of the promotion
     promotion_status = models.CharField(
         max_length=100, choices=PromotionStatus.choices(), blank=False

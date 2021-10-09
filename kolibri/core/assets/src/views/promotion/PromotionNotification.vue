@@ -88,16 +88,16 @@
                   <span v-else>{{ promotionObj.quiz_name }}</span>
                 </td>
                 <td class="table-data">
-                  {{ promotionObj.quiz_score }}
+                  {{ promotionObj.quiz_score }}%
                 </td>
                 <td class="table-data">
-                  {{ promotionObj.quiz_score }}
+                  {{ promotionObj.lesson_completion }}%
                 </td>
                 <td v-if="!isAdminUser" class="table-data">
                   {{ promotionStatusText(promotionObj.promotion_status) }} 
                   <template v-if="learnerNeedsReview(promotionObj.promotion_status)" class="center-text">
                     <KIcon 
-                      :ref="toolkitReference(promotionObj.id)" 
+                      :ref="toolkitReference(promotionObj.id)"
                       icon="warningIncomplete"
                       class="item svg-item"
                     />
@@ -211,7 +211,6 @@
         fullName: state => state.core.session.full_name,
       }),
       learnerList() {
-        console.log(this.promotionList);
         return this.promotionList;
       },
       showPromotionNotification() {

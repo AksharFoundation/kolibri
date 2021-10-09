@@ -42,6 +42,7 @@ from kolibri.core.auth.models import LearnerGroup
 from kolibri.core.content.api import OptionalPageNumberPagination
 from kolibri.core.exams.models import Exam
 from kolibri.core.promotion.utils import create_new_promotion_entry
+from kolibri.core.promotion.utils import update_lesson_completion_score
 
 logger = logging.getLogger(__name__)
 
@@ -150,6 +151,15 @@ class ContentSummaryLogViewSet(LoggerViewSet):
     serializer_class = ContentSummaryLogSerializer
     pagination_class = OptionalPageNumberPagination
     filter_class = ContentSummaryLogFilter
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.queryset.get(pk=kwargs.get('pk'))
+        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        if 'progress' in request.data:
+            update_lesson_completion_score(instance.content_id, request.data['progress'], instance.user_id)
+        return Response(serializer.data)
 
 
 class TotalContentProgressViewSet(viewsets.ModelViewSet):

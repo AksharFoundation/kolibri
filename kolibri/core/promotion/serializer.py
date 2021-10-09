@@ -16,6 +16,7 @@ class PromotionQueueSerializer(KolibriModelSerializer):
             "quiz_id",
             "quiz_name",
             "quiz_score",
+            "lesson_completion",
             "promotion_status",
             "coach_approver",
             "admin_approver",
