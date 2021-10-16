@@ -204,6 +204,10 @@
         return Boolean(this.selectedExercises[exerciseId]);
       },
       isSelected(question) {
+        // force contentRenderer to reload the perseus file
+        if (this.$refs.contentRenderer) {
+          this.$refs.contentRenderer.$refs.contentView.perseusFile = null;
+        }
         return (
           this.currentQuestion.question_id === question.question_id &&
           this.currentQuestion.exercise_id === question.exercise_id

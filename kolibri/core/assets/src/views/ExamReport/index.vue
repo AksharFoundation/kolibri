@@ -42,6 +42,7 @@
         />
         <KContentRenderer
           v-if="exercise"
+          ref="contentRenderer"
           :itemId="itemId"
           :allowHints="false"
           :kind="exercise.kind"
@@ -182,6 +183,10 @@
     },
     methods: {
       handleNavigateToQuestion(questionNumber) {
+        // force contentRenderer to reload the perseus file
+        if (this.$refs.contentRenderer) {
+          this.$refs.contentRenderer.$refs.contentView.perseusFile = null;
+        }
         this.navigateToQuestion(questionNumber);
         this.$refs.multiPaneLayout.scrollMainToTop();
         this.showCorrectAnswer = false;

@@ -46,7 +46,7 @@
     },
     $trs: {
       demoServerHeader: {
-        message: 'Welcome to the Kolibri demo site',
+        message: 'Welcome to the Akshar demo site',
         context: 'Title on Kolibri demo site sign in page.',
       },
       demoServerP1: {
@@ -65,12 +65,12 @@
       },
       demoServerP2: {
         message:
-          'This online version of Kolibri is intended for demonstration purposes only. Users and data will be periodically deleted. The demo shows features of the latest Kolibri version, and all resources found are samples.',
+          'This online version of Akshar is intended for demonstration purposes only. Users and data will be periodically deleted. The demo shows features of the latest Kolibri version, and all resources found are samples.',
         context: 'Descriptive text on Kolibri demo sign in page.',
       },
       demoServerP3: {
         message:
-          'To learn more about using Kolibri in an offline context and better understand the platform:',
+          'To learn more about using Akshar in an offline context and better understand the platform:',
         context: 'Descriptive text on Kolibri demo sign in page.',
       },
       demoServerA1: {

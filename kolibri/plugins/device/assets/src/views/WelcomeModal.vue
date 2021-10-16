@@ -48,7 +48,7 @@
     render: createElement => window.setTimeout(createElement, 750),
     $trs: {
       welcomeModalHeader: {
-        message: 'Welcome to Kolibri!',
+        message: 'Welcome to Akshar!',
         context: 'Title of welcome window which displays on first sign in as a super admin.',
       },
       welcomeModalContentDescription: {

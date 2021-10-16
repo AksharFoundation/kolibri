@@ -302,6 +302,11 @@
         return Promise.resolve();
       },
       goToQuestion(questionNumber) {
+        // force contentRenderer to reload the perseus file
+        if (this.$refs.contentRenderer) {
+          this.$refs.contentRenderer.$refs.contentView.perseusFile = null;
+        }
+
         const promise = this.debouncedSetAndSaveCurrentExamAttemptLog.flush() || Promise.resolve();
         promise.then(() => {
           this.$router.push({
