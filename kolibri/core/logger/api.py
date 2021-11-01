@@ -143,7 +143,6 @@ class ContentSummaryLogFilter(BaseLogFilter):
         model = ContentSummaryLog
         fields = ["user_id", "content_id"]
 
-
 class ContentSummaryLogViewSet(LoggerViewSet):
     permission_classes = (KolibriAuthPermissions,)
     filter_backends = (KolibriAuthPermissionsFilter, DjangoFilterBackend)
@@ -157,6 +156,7 @@ class ContentSummaryLogViewSet(LoggerViewSet):
         serializer = self.serializer_class(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        # Update the promotion status of the learner if it has achieved required progress levels
         if 'progress' in request.data:
             update_lesson_completion_score(instance.content_id, request.data['progress'], instance.user_id)
         return Response(serializer.data)

@@ -2,22 +2,31 @@
 
   <div>
     <div v-if="isUserLoggedIn ">
-      <h1>
+
+      <h2>
         <KLabeledIcon icon="classes" :label="$tr('yourClassesHeader')" />
-      </h1>
+      </h2>
       <CardGrid v-if="classrooms.length > 0" :gridType="2">
         <CardLink
           v-for="c in classrooms"
           :key="c.id"
           :to="classAssignmentsLink(c.id)"
         >
-          {{ c.name }}
+          {{ c.name }} 
         </CardLink>
       </CardGrid>
+
       <p v-else>
         {{ $tr('noClasses') }}
       </p>
+
+      <div v-if="hasNotifications">
+
+        <NotificationBlock />
+
+      </div>
     </div>
+
 
     <AuthMessage v-else authorizedRole="learner" />
   </div>
@@ -32,6 +41,7 @@
   import commonCoreStrings from 'kolibri.coreVue.mixins.commonCoreStrings';
   import CardGrid from '../cards/CardGrid.vue';
   import CardLink from '../cards/CardLink.vue';
+  import NotificationBlock from '../cards/NotificationBlock.vue';
   import { classAssignmentsLink } from './classPageLinks';
 
   export default {
@@ -45,17 +55,25 @@
       AuthMessage,
       CardLink,
       CardGrid,
+      NotificationBlock,
     },
     mixins: [commonCoreStrings],
     computed: {
       ...mapGetters(['isUserLoggedIn']),
-      ...mapState('classes', ['classrooms']),
+      ...mapState('classes', ['classrooms', 'notifications']),
+      hasNotifications() {
+        if (this.notifications === undefined) {
+          return false;
+        }
+        return Object.keys(this.notifications).length > 0;
+      },
     },
     methods: {
       classAssignmentsLink,
     },
     $trs: {
       yourClassesHeader: 'Your classes',
+      yourNotificationsHeader: 'Your notifications',
       noClasses: {
         message: 'You are not enrolled in any classes',
         context:

@@ -9,13 +9,16 @@ from kolibri.core.logger.models import ContentSummaryLog
 from kolibri.core.auth.models import FacilityUser
 from kolibri.core.logger import models as logger_models
 from django.db.models import Q
+from django.utils import timezone
 
 ROLE_COACH = "coach"
 ROLE_FACILTY_ADMIN = "facility"
+ROLE_LEARNER = "learner"
 STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED", "LESSONS_PENDING"]
 STATUS_TO_BE_INCLUDED_FOR_ADMIN =  "RECOMMENDED"
-PASS_SCORE = 10.0
-REQUIRED_LESSON_COMPLETION = 1.0
+STATUS_TO_BE_INCLUDED_FOR_LEARNER =  "LESSONS_PENDING"
+PASS_SCORE = 0.0
+REQUIRED_LESSON_COMPLETION = 0.1
 REQUIRED_LESSON_COMPLETION_PCTG = REQUIRED_LESSON_COMPLETION * 100
 
 def get_promotion_list(role, **kwargs):
@@ -27,6 +30,14 @@ def get_promotion_list(role, **kwargs):
         classroom_id = classroom_id = kwargs.get("classroom_id")
         query_promotion = PromotionQueue.objects.filter(classroom_id = classroom_id, promotion_status = STATUS_TO_BE_INCLUDED_FOR_ADMIN)
         return serialize_promotions(query_promotion)
+    if role == ROLE_LEARNER:
+         learner_id = kwargs.get("learner_id")
+         classroom_id = classroom_id = kwargs.get("classroom_id")
+         time_threshold = timezone.now() - timezone.timedelta(hours=240)
+         query_promotion = PromotionQueue.objects.filter(learner_id = learner_id, classroom_id = classroom_id, update_timestamp__gt = time_threshold)
+         return serialize_promotions(query_promotion)
+
+
 
 def serialize_promotions(queryset):
     return list(queryset.values(
@@ -70,7 +81,7 @@ def create_new_promotion_entry(exam_log_id, request):
         classroom_id = exam_data[0]["collection"],
         facility_id = classroom_data[0]["parent"],   
         defaults={
-            'learner_name' : user_data[0]["full_name"],
+            'learner_name' : user_data[0]["full_name"], 
             'classroom_name' : classroom_data[0]["name"],
             'quiz_name' : exam_data[0]["title"],
             'quiz_score' : quiz_score,
@@ -105,6 +116,8 @@ def serialize_classroom_data(queryset):
 
 def calculte_score(question_count, exam_attempt_data):
     correct_ans_count = sum(map(lambda x : x["correct"] == 1.0, exam_attempt_data))
+    if correct_ans_count == 0:
+        return 0.0
     return correct_ans_count/question_count * 100.0
 
 
@@ -118,11 +131,13 @@ def promotion_entry_already_exists(quiz_id, learner_id, classroom_id, facility_i
 def get_next_classroom_id(classroom):
     next_classroom_name = __get_next_classroom_name(classroom)   
     classroom_query = Classroom.objects.filter(name =  next_classroom_name)    
+    if not classroom_query:
+        return None   
     classroom_data = serialize_classroom_data(classroom_query)
     return classroom_data[0]["id"]
 
 def __get_next_classroom_name(classroom):
-    arr = classroom.split()
+    arr = classroom.rsplit(' ', 1)
     subject_name = arr[0]
     next_class_level = int(arr[1]) + 1
     return subject_name + " " + str(next_class_level)  
@@ -134,8 +149,9 @@ def get_lesson_completion_score(classroom_id, learner_id):
                 collection = classroom_id).distinct().values(
                 "resources", 
             )
+    # if lessons are not assigned, set lesson completion as 100        
     if lessons is None:
-        return 0.0  
+        return 100.0 
     lesson_content_ids = set()
     for lesson in lessons:
         lesson_content_ids |= set(
@@ -156,7 +172,11 @@ def update_lesson_completion_score(content_id, progress, learner_id):
     if progress < REQUIRED_LESSON_COMPLETION:
         return
     classroom_id = get_classroom_id(content_id, learner_id)
-    print(classroom_id)
+
+    # Not throwing error since the main flows shouldnt be affected
+    if classroom_id is None:
+        return
+
     lesson_completion_score = get_lesson_completion_score(classroom_id, learner_id)
     if lesson_completion_score >= REQUIRED_LESSON_COMPLETION_PCTG:
         PromotionQueue.objects.filter(learner_id = learner_id, classroom_id = classroom_id).update(lesson_completion = lesson_completion_score,promotion_status="REVIEW")  
@@ -164,7 +184,7 @@ def update_lesson_completion_score(content_id, progress, learner_id):
 
 def get_classroom_id(content_id, learner_id):
     lessons = Lesson.objects.filter(lesson_assignments__collection__membership__user=learner_id,
-                is_active=True,).distinct().values("resources", "collection") 
+                is_active=True,).distinct().values("resources", "collection")  
 
     for lesson in lessons:
         for resource in lesson["resources"]:

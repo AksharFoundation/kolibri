@@ -59,7 +59,6 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
 
     
     def handle_create(self, request, *args, **kwargs):
-        PromotionQueue.objects.all().delete()
         serialized = self.get_serializer(data=request.data, many=isinstance(request.data, list))
         serialized.is_valid(raise_exception=True)
         self.perform_create(serialized)
@@ -93,6 +92,8 @@ class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet
 
     def _move_student_to_next_level(self, classroom_id, classroom_name, learner_id):
         next_classroom_id = get_next_classroom_id(classroom_name)
+        if next_classroom_id is None:
+            return classroom_id
         Membership.objects.filter(collection= classroom_id, user = learner_id).delete()
         facilyUser = FacilityUser.objects.filter(id = learner_id)
         collection = Collection.objects.filter(id = next_classroom_id)

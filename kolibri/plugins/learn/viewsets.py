@@ -13,7 +13,7 @@ from kolibri.core.lessons.models import Lesson
 from kolibri.core.logger.models import ContentSummaryLog
 from kolibri.core.logger.models import ExamAttemptLog
 from kolibri.core.logger.models import ExamLog
-
+from kolibri.core.promotion.utils import get_promotion_list
 
 class LearnerClassroomViewset(ReadOnlyValuesViewset):
     """
@@ -118,6 +118,7 @@ class LearnerClassroomViewset(ReadOnlyValuesViewset):
             )
         )
 
+       
         for exam in exams:
             closed = exam.pop("closed")
             score = exam.pop("score")
@@ -143,7 +144,10 @@ class LearnerClassroomViewset(ReadOnlyValuesViewset):
                 "lessons": [
                     lesson for lesson in lessons if lesson["collection"] == item["id"]
                 ],
+                "promotions" : get_promotion_list("learner", learner_id = self.request.user.id, classroom_id =  item["id"])
+
             }
+
             out_items.append(item)
         return out_items
 

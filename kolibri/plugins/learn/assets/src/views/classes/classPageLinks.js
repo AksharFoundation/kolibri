@@ -26,3 +26,9 @@ export function lessonPlaylistLink(lessonId) {
     },
   };
 }
+
+export function notificationListLink() {
+  return {
+    name: ClassesPageNames.ALL_NOTIFICATIONS,
+  };
+}
