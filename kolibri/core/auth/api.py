@@ -157,6 +157,8 @@ class FacilityDatasetViewSet(ValuesViewset):
         "location",
         "registered",
         "preset",
+        "learner_promotion_required_quiz_score",
+        "learner_promotion_required_lesson_score",
     )
 
     field_map = {"allow_guest_access": lambda x: allow_guest_access()}

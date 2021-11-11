@@ -158,7 +158,7 @@ class ContentSummaryLogViewSet(LoggerViewSet):
         serializer.save()
         # Update the promotion status of the learner if it has achieved required progress levels
         if 'progress' in request.data:
-            update_lesson_completion_score(instance.content_id, request.data['progress'], instance.user_id)
+            update_lesson_completion_score(instance.content_id, request.data['progress'], instance.user_id, instance.user.facility_id)
         return Response(serializer.data)
 
 

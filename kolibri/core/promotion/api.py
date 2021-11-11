@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,7 +32,7 @@ class PromotionQueuePermissions(permissions.BasePermission):
         except (Collection.DoesNotExist, ValueError):
             return False
 
-class PromotionViewSet(CreateModelMixin, ListModelMixin, viewsets.GenericViewSet):
+class PromotionViewSet(CreateModelMixin, ListModelMixin, DestroyModelMixin, viewsets.GenericViewSet):
     ## should be allowed only for coach or admin
     permission_classes = (IsAuthenticated,)
     queryset = PromotionQueue.objects.all()

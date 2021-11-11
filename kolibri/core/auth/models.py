@@ -152,6 +152,9 @@ class FacilityDataset(FacilityDataSyncableModel):
     learner_can_delete_account = models.BooleanField(default=True)
     learner_can_login_with_no_password = models.BooleanField(default=False)
     show_download_button_in_learn = models.BooleanField(default=True)
+    learner_promotion_required_quiz_score = models.FloatField(default=100.0)
+    learner_promotion_required_lesson_score = models.FloatField(default=100.0)
+    show_download_button_in_learn = models.BooleanField(default=True)
     registered = models.BooleanField(default=False)
 
     def __str__(self):

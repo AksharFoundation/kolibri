@@ -35,7 +35,8 @@
             <template
               v-if="
                 setting !== 'learner_can_edit_password' &&
-                  setting !== 'learner_can_login_with_no_password'
+                  setting !== 'learner_can_login_with_no_password' &&
+                  !isPromotionSettings(setting)
               "
             >
               <KCheckbox
@@ -63,6 +64,33 @@
               />
             </template>
           </template>
+          <div class="fieldset">
+            <label class="fieldset-label"> {{ $tr('studentPromotionSettings') }}</label>
+            <p>
+              <KTextbox
+                ref="requiredQuizScore"
+                v-model="settings.learner_promotion_required_quiz_score"
+                :label="$tr('studentPromotionRequiredQuizScore')"
+                :value="settings.learner_promotion_required_quiz_score"
+                :autofocus="true"
+                :maxlength="3"
+                :min="0"
+                :max="100"
+                type="number"
+              />
+              <KTextbox
+                ref="requiredLessonScore"
+                v-model="settings.learner_promotion_required_lesson_score"
+                :label="$tr('studentPromotionRequiredLessonScore')"
+                :value="settings.learner_promotion_required_lesson_score"
+                :autofocus="true"
+                :maxlength="3"
+                :min="0"
+                :max="100"
+                type="number"
+              />
+            </p>
+          </div>
         </div>
 
         <div>
@@ -127,6 +155,13 @@
     'learner_can_sign_up',
     'learner_can_login_with_no_password',
     'show_download_button_in_learn',
+    'learner_promotion_required_quiz_score',
+    'learner_promotion_required_lesson_score',
+  ];
+
+  const promotionSettingsList = [
+    'learner_promotion_required_quiz_score',
+    'learner_promotion_required_lesson_score',
   ];
 
   export default {
@@ -214,6 +249,9 @@
           this.updateSettingValue('learner_can_edit_password', false);
         }
       },
+      isPromotionSettings(settingName) {
+        return promotionSettingsList.includes(settingName);
+      },
       updateSettings(action) {
         this.$store
           .dispatch(action)
@@ -290,6 +328,18 @@
         message: 'Reset to defaults',
         context: 'Button that resets the facility to its default settings.',
       },
+      studentPromotionSettings: {
+        message: 'Student promotion settings',
+        context: 'Title of the student promotion settings section',
+      },
+      studentPromotionRequiredQuizScore: {
+        message: 'Required exam score',
+        context: 'Required exam score for a learner to be eligible for promotion',
+      },
+      studentPromotionRequiredLessonScore: {
+        message: 'Required lesson completion score',
+        context: 'Required lesson completion score for a learner to be eligible for promotion',
+      },
       documentTitle: {
         message: 'Configure Facility',
         context: 'Title of page.',
@@ -314,6 +364,16 @@
 
   .checkbox-password {
     margin-left: 24px;
+  }
+
+  .fieldset {
+    margin: 16px 0;
+  }
+
+  .fieldset-label {
+    font-size: 15px;
+    // to match label in KSelect
+    color: rgba(0, 0, 0, 0.54);
   }
 
 </style>

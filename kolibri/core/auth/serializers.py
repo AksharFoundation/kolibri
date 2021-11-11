@@ -91,6 +91,8 @@ class FacilityDatasetSerializer(serializers.ModelSerializer):
             "location",
             "registered",
             "preset",
+            "learner_promotion_required_quiz_score",
+            "learner_promotion_required_lesson_score",
         )
 
     def save(self, **kwargs):

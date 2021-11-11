@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from kolibri.core import content
 from kolibri.core.auth.models import Classroom, Collection
 from django.db.models import Q
@@ -7,6 +8,7 @@ from kolibri.core.logger.models import ExamAttemptLog
 from kolibri.core.lessons.models import Lesson
 from kolibri.core.logger.models import ContentSummaryLog
 from kolibri.core.auth.models import FacilityUser
+from kolibri.core.auth.models import FacilityDataset
 from kolibri.core.logger import models as logger_models
 from django.db.models import Q
 from django.utils import timezone
@@ -17,9 +19,7 @@ ROLE_LEARNER = "learner"
 STATUS_TO_BE_EXCLUDED_FOR_COACH =  ["APPROVED", "LESSONS_PENDING"]
 STATUS_TO_BE_INCLUDED_FOR_ADMIN =  "RECOMMENDED"
 STATUS_TO_BE_INCLUDED_FOR_LEARNER =  "LESSONS_PENDING"
-PASS_SCORE = 0.0
-REQUIRED_LESSON_COMPLETION = 0.1
-REQUIRED_LESSON_COMPLETION_PCTG = REQUIRED_LESSON_COMPLETION * 100
+COLLECTION_KIND_FACILITY = 'facility'
 
 def get_promotion_list(role, **kwargs):
     if role == ROLE_COACH:
@@ -65,21 +65,23 @@ def create_new_promotion_entry(exam_log_id, request):
     exam_queryset = logger_models.Exam.objects.filter(id=exam_log_data[0]["exam"])
     exam_data = serialize_exam_data(exam_queryset)
     quiz_score = calculte_score(exam_data[0]["question_count"], exam_attempt_data)
-    if quiz_score < PASS_SCORE:
-        return
+   
     promotion_status = "REVIEW"    
     user_queryset = FacilityUser.objects.filter(id=exam_log_data[0]["user"])
     user_data = serialize_user_data(user_queryset)
     classroom_query = Classroom.objects.filter(id = exam_data[0]["collection"])
     classroom_data = serialize_classroom_data(classroom_query)
+    facility_id = classroom_data[0]["parent"]
+    if quiz_score < get_exam_pass_score(facility_id):
+        return
     lesson_completion = get_lesson_completion_score(exam_data[0]["collection"], exam_log_data[0]["user"])
-    if lesson_completion < REQUIRED_LESSON_COMPLETION_PCTG:
+    if lesson_completion < get_required_lesson_completion_score(facility_id):
         promotion_status = "LESSONS_PENDING"
     PromotionQueue.objects.update_or_create(
         learner_id = exam_log_data[0]["user"],
         quiz_id = exam_data[0]["id"],
         classroom_id = exam_data[0]["collection"],
-        facility_id = classroom_data[0]["parent"],   
+        facility_id =facility_id,   
         defaults={
             'learner_name' : user_data[0]["full_name"], 
             'classroom_name' : classroom_data[0]["name"],
@@ -150,7 +152,7 @@ def get_lesson_completion_score(classroom_id, learner_id):
                 "resources", 
             )
     # if lessons are not assigned, set lesson completion as 100        
-    if lessons is None:
+    if not lessons:
         return 100.0 
     lesson_content_ids = set()
     for lesson in lessons:
@@ -168,8 +170,10 @@ def get_lesson_completion_score(classroom_id, learner_id):
     lesson_completion_score = (total_progress_score/count_of_contents) * 100   
     return lesson_completion_score   
 
-def update_lesson_completion_score(content_id, progress, learner_id):
-    if progress < REQUIRED_LESSON_COMPLETION:
+def update_lesson_completion_score(content_id, progress, learner_id, facility_id):
+    reqd_lesson_completion = get_required_lesson_completion_score(facility_id)
+    normalised_reqd_score = reqd_lesson_completion/100
+    if progress < normalised_reqd_score:
         return
     classroom_id = get_classroom_id(content_id, learner_id)
 
@@ -178,7 +182,7 @@ def update_lesson_completion_score(content_id, progress, learner_id):
         return
 
     lesson_completion_score = get_lesson_completion_score(classroom_id, learner_id)
-    if lesson_completion_score >= REQUIRED_LESSON_COMPLETION_PCTG:
+    if lesson_completion_score >= reqd_lesson_completion:
         PromotionQueue.objects.filter(learner_id = learner_id, classroom_id = classroom_id).update(lesson_completion = lesson_completion_score,promotion_status="REVIEW")  
 
 
@@ -190,4 +194,19 @@ def get_classroom_id(content_id, learner_id):
         for resource in lesson["resources"]:
             if resource['content_id'] == content_id:
                 return lesson['collection']
-          
+
+def get_facility_dataset(facility_id):
+    dataset = FacilityDataset.objects.filter(
+            collection__kind=COLLECTION_KIND_FACILITY,
+            collection__id=facility_id
+        ).distinct().values("learner_promotion_required_quiz_score", "learner_promotion_required_lesson_score")  
+    return dataset          
+
+
+def get_exam_pass_score(facility_id):
+    queryset = get_facility_dataset(facility_id)
+    return queryset[0]['learner_promotion_required_quiz_score']
+
+def get_required_lesson_completion_score(facility_id):
+    queryset = get_facility_dataset(facility_id)
+    return queryset[0]['learner_promotion_required_lesson_score']
